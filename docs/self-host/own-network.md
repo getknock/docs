@@ -3,7 +3,7 @@ title: Run a network of your own
 description: Your own World ID app, your own KnockBinding on World Chain, and your own knockd, for humans who bind on your network instead of Knock's.
 ---
 
-On Knock's network, Knock's World ID app proves who's human, and only Knock's knockd can sign its requests. A network of your own replaces that one piece: your World ID app, your KnockBinding, and your knockd, which holds your app's key. Everything else is the same code, and the Wedgie needs nothing new.
+On Knock's network, Knock's World ID app proves who's human, and only Knock's knockd can sign its requests. A network of your own replaces that part with your own World ID app, KnockBinding and knockd, which holds your app's key. Everything else is the same code, and the Wedgie needs nothing new.
 
 Most people don't need this. To keep Knock's servers out of the path, [host the parts](overview.md) on Knock's network. Run a network when you want humans to be proved by an app you control, for example a community that won't depend on Knock for setting up a Wedgie.
 

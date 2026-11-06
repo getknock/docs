@@ -7,7 +7,7 @@ knockd is the small server the [Console](console.md) needs while a person sets u
 
 - **It relays bindings.** When a Wedgie says yes to being bound to a human, knockd checks the Wedgie's signature and the human's World ID proof, then sends the binding to KnockBinding on World Chain and pays its gas.
 - **It answers lookups.** It reads a binding back from its transaction, finds a Wedgie's latest binding by its key, and finds a returning human's World ID session.
-- **It signs World ID requests**, if it holds its network's RP key. Only one knockd per network does, as [Host Knock yourself](overview.md#the-one-thing-that-belongs-to-a-network) explains.
+- **It signs World ID requests**, if it holds its network's RP key. Only one knockd per network does, as [Host Knock yourself](overview.md#one-rp-key-per-network) explains.
 
 It never sees a knock. Knocks go from the Door to a site's verifier, and knockd isn't in that path.
 

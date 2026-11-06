@@ -5,7 +5,7 @@ description: The Door is static files. Build it, serve it on HTTPS, and point do
 
 The Door is the popup door-sdk opens when someone knocks. It talks to the Wedgie over Web Serial, hands it your challenge and your origin, and hands back what the Wedgie signed. It calls no server and holds no keys, so any static host can serve it.
 
-You might host it to keep Knock's machines out of the path of your knocks, to serve it from your own domain, or because Knock's isn't up where you need it.
+You might host it to keep Knock's machines out of the path of your knocks, to serve it from your own domain, or because Knock doesn't host one yet.
 
 ## Build it
 

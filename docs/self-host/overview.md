@@ -3,7 +3,7 @@ title: Host Knock yourself
 description: Every part of Knock can run on your own machines. What each part is, what it needs, and the one thing that belongs to whoever runs a network.
 ---
 
-Nothing in Knock has to run on Knock's servers. Every part is open source and builds from [`getknock/knock`](https://github.com/getknock/knock), and most of them are static files or a package. This page says what each part is and where its guide is.
+Nothing in Knock has to run on Knock's servers. Every part builds from [`getknock/knock`](https://github.com/getknock/knock), and most of them are static files or a package.
 
 ## The parts
 
@@ -23,7 +23,7 @@ A Wedgie that's already set up never needs Knock's servers. Its records are in E
 
 What does go through a server is setting a Wedgie up: binding it to a human needs a World ID proof, and a World ID proof request has to be signed by the app that asks for it.
 
-## The one thing that belongs to a network
+## One RP key per network
 
 World ID only answers requests signed by an app's RP key, the key World's registry on World Chain holds for that app. For Knock's network, that's Knock's key, and only Knock's knockd holds it. So:
 

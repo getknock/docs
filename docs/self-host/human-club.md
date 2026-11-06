@@ -3,7 +3,7 @@ title: Host the Human Club
 description: The Human Club is a Next.js app with a libSQL database. Run it on Vercel with Turso, or on any server that runs Node.
 ---
 
-The Human Club is Knock's demo site: petitions and fundraisers where every name is a human's, each signing once. It's [`apps/bouncer`](https://github.com/getknock/knock/tree/main/apps/bouncer) in `getknock/knock`, a Next.js app that checks knocks in its own functions with [`@knock-dev/verify`](../guides/verify-in-your-server.md) and keeps its records in a libSQL database. A copy of your own is a whole club of its own, with its own petitions, fundraisers and members.
+The Human Club is Knock's demo site: petitions and fundraisers for humans only, where each human signs a petition once. It's [`apps/bouncer`](https://github.com/getknock/knock/tree/main/apps/bouncer) in `getknock/knock`, a Next.js app that checks knocks in its own functions with [`@knock-dev/verify`](../guides/verify-in-your-server.md) and keeps its records in a libSQL database. A copy of your own is a whole club of its own, with its own petitions, fundraisers and members.
 
 ## What you need
 
