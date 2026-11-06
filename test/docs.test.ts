@@ -236,11 +236,14 @@ describe('door-sdk and the Door', () => {
   })
 
   test('the defaults the docs give are the SDK’s', () => {
-    expect(sdk).toContain("export const DOOR = 'http://localhost:3000'")
+    expect(sdk).toContain("export const DOOR = 'https://door.getknock.dev'")
     expect(sdk).toContain('o.timeoutMs ?? 180_000')
     expect(sdk).toContain("'popup,width=420,height=680'")
     const ref = doc('reference/door-sdk.md')
-    expect(ref).toContain("const DOOR = 'http://localhost:3000'")
+    expect(ref).toContain("const DOOR = 'https://door.getknock.dev'")
+    // No page or skill file still gives the local Door as the default
+    for (const f of [...filesUnder(DOCS).map((f) => path.join('docs', f)), ...filesUnder(SKILLS).map((f) => path.join('skills', f))])
+      expect(`${f}: ${/\bDOOR\b[^\n]*localhost/.test(read(f))}`).toBe(`${f}: false`)
     expect(ref).toContain('| `timeoutMs` | `180000` |')
     expect(ref).toContain('420 by 680')
   })

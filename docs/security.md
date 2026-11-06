@@ -70,7 +70,7 @@ Your verifier believes its RPCs. One that lies could show records or a binding t
 - It reads your origin from the browser, never from your page.
 - It answers only the window that opened it, at that window's origin, and only once.
 - It refuses to work inside a frame, where another page could cover what it says.
-- It runs on your machine for now, at `http://localhost:3000`.
+- Knock's is at `https://door.getknock.dev`. A site can [serve its own](self-host/door.md) instead.
 
 ## Reporting a problem
 

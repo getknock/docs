@@ -7,7 +7,7 @@ description: The verifier's checks as a Rust library, for a server that checks k
 
 ## Add it
 
-It isn't on crates.io, so depend on the repo. It's private for now, so Cargo needs your git credentials:
+It isn't on crates.io, so depend on the repo:
 
 ```toml title="Cargo.toml"
 [dependencies]

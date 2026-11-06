@@ -75,6 +75,7 @@ To fund it, send ETH on World Chain to the gas key's address, from an exchange t
 | `WORLD_RPC` | none, needed | A World Chain RPC URL. It's never logged, and knockd leaves URLs out of the errors it sends back, since a provider's URL often carries its key. |
 | `RELAYER_WALLET_PRIV_KEY` | none, needed | The gas key, `0x` and 64 hex digits. It pays for the bindings knockd sends. |
 | `WORLD_RP_KEY_FILE` | `knock-worldchain-key.json` | The World ID RP key's file, or `none`. If the default file isn't there, knockd starts without signing, and says so. If a file you named isn't there, it stops. |
+| `WORLD_RP_KEY` | none | The RP key itself, `0x` and 64 hex digits, for hosts that hand secrets over as environment variables, such as Fly.io. Set this or `WORLD_RP_KEY_FILE`, not both. |
 | `WORLD_APP_ID` | none | The World ID app's id, `app_…`. Needed only with an RP key. |
 | `WORLD_RP_ID` | none | The app's RP id, `rp_` and 16 hex digits. Needed only with an RP key. |
 | `KNOCKD_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | The Consoles that may call it from a browser, separated by commas, each exactly as browsers send it. `*` lets any Console call it. |
@@ -120,6 +121,53 @@ WantedBy=multi-user.target
 ```
 
 Put the binary, `.env` and, if it has one, the RP key file in `/opt/knockd`, owned by the `knockd` user. Then `systemctl enable --now knockd`.
+
+## On Fly.io
+
+[Fly.io](https://fly.io) runs knockd from the repo's [`fly.toml`](https://github.com/getknock/knock/blob/main/fly.toml) and [its Dockerfile](https://github.com/getknock/knock/blob/main/server/knockd/Dockerfile), and serves it on HTTPS itself, so there's no proxy to set up. With [flyctl](https://fly.io/docs/flyctl/install/) installed and signed in, work from the root of your checkout: the image builds from the whole Rust workspace.
+
+1. **Make the app.** Pick a name, put it in `fly.toml` as `app`, and create it:
+
+   ```bash
+   fly apps create your-knockd
+   ```
+
+   `fly.toml` puts it in Singapore (`primary_region = "sin"`). Change that to the [region](https://fly.io/docs/reference/regions/) nearest the people who'll use your Console.
+
+2. **Give it its secrets.** Fly keeps them encrypted and hands them to knockd as environment variables. To keep them out of your shell's history, import them from the `.env` you made above:
+
+   ```bash
+   grep -E '^(WORLD_RPC|RELAYER_WALLET_PRIV_KEY)=' .env | fly secrets import
+   ```
+
+   A knockd that signs for a network also needs its RP key and its app's ids. Import those too, the key as `WORLD_RP_KEY`:
+
+   ```bash
+   grep -E '^(WORLD_APP_ID|WORLD_RP_ID)=' .env | fly secrets import
+   printf 'WORLD_RP_KEY=%s\n' "$(jq -r .privateKey our-rp-key.json)" | fly secrets import
+   ```
+
+3. **Set who may call it.** `fly.toml` sets `KNOCKD_ORIGINS` to `*`, which suits a knockd that signs for its network, since every Console on it asks for signatures there. For a knockd only your own Console uses, set your Console's origin instead.
+
+4. **Deploy it**, as one machine:
+
+   ```bash
+   fly deploy --ha=false
+   ```
+
+   One machine is enough, and keeps one count of the hourly limits. The root's `.dockerignore` lets only the Rust workspace into the build, so `.env` and key files stay on your machine.
+
+5. **Check it:**
+
+   ```bash
+   curl -s https://your-knockd.fly.dev/health
+   ```
+
+   `signs` is `true` if you gave it an RP key. `fly logs` shows its log.
+
+6. **Give it your domain**, if you like: `fly certs add knockd.example`, then add the DNS records it prints, such as a `CNAME` to `your-knockd.fly.dev`. On Cloudflare, leave that record unproxied, so Fly can get its certificate.
+
+To change a setting later, `fly secrets set` or `fly secrets import` again: the machine restarts with it. To update knockd, pull and `fly deploy --ha=false` again.
 
 ## Point a Console at it
 

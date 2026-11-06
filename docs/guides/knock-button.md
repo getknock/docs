@@ -174,7 +174,7 @@ The Human Club does the same in [`apps/bouncer/app/Knock.tsx`](https://github.co
 | --- | --- | --- | --- |
 | `challenge` | `` `0x${string}` `` or a promise of one | Required | Your verifier's challenge. A promise lets the Door open at once. |
 | `mode` | `1` | `1` | Bound: the human comes from the Wedgie's binding. Mode 2 isn't offered. |
-| `door` | `string` | `DOOR`, `http://localhost:3000` | Where the Door is. |
+| `door` | `string` | `DOOR`, `https://door.getknock.dev` | Where the Door is. |
 | `timeoutMs` | `number` | `180000` | How long the whole knock may take, presses included. |
 
 The [door-sdk reference](../reference/door-sdk.md) has every type, and the messages door-sdk and the Door send each other.

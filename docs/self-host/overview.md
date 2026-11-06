@@ -3,7 +3,7 @@ title: Host Knock yourself
 description: Every part of Knock can run on your own machines. What each part is, what it needs, and the one thing that belongs to whoever runs a network.
 ---
 
-Nothing in Knock has to run on Knock's servers. Every part builds from [`getknock/knock`](https://github.com/getknock/knock), and most of them are static files or a package.
+Nothing in Knock has to run on Knock's servers. Every part is open source and builds from [`getknock/knock`](https://github.com/getknock/knock), and most of them are static files or a package.
 
 ## The parts
 
@@ -27,7 +27,7 @@ What does go through a server is setting a Wedgie up: binding it to a human need
 
 World ID only answers requests signed by an app's RP key, the key World's registry on World Chain holds for that app. For Knock's network, that's Knock's key, and only Knock's knockd holds it. So:
 
-- **On Knock's network** you can run everything yourself, a knockd included, except the signature on World ID requests. Your Console gets those from Knock's knockd (`NEXT_PUBLIC_KNOCKD_RP`) and does the rest with yours: [Run knockd](knockd.md) says how.
+- **On Knock's network** you can run everything yourself, a knockd included, except the signature on World ID requests. Your Console gets those from Knock's knockd, as it does unless you set `NEXT_PUBLIC_KNOCKD_RP`, and does the rest with yours: [Run knockd](knockd.md) says how.
 - **On a network of your own** you hold the RP key: your own World ID app, your own KnockBinding, your own knockd. [Run a network of your own](own-network.md) walks through it. Sites take your bindings only if they choose to, and your humans' nullifiers differ from their nullifiers on Knock's network.
 
 ## Choosing what to host

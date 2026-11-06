@@ -119,10 +119,10 @@ The Door passes the Wedgie's other codes on as they are. [Add a Knock button](..
 ## DOOR
 
 ```ts
-const DOOR = 'http://localhost:3000'
+const DOOR = 'https://door.getknock.dev'
 ```
 
-The Door that door-sdk opens unless you pass `door`: Knock's own, which runs locally for now, as part of the Knock Console.
+The Door that door-sdk opens unless you pass `door`: Knock's own. To use [one you serve yourself](../self-host/door.md), pass its address as `door`.
 
 ## Hex
 

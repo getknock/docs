@@ -8,25 +8,18 @@ By the end, you'll have a page with a Knock button, a small server that checks e
 ## Before you start
 
 - **Bun** 1.4 or later.
-- **A checkout of `getknock/knock`**. It's private for now, so you need access. You'll work in a folder beside it.
-- **To knock:** a Wedgie that's set up in the Knock Console, meaning named and bound to a human, and Chrome or another Chromium browser on a desktop.
-
-> [!NOTE]
-> You can build all of this without a Wedgie. You need one only at step 4, to press green. [Test your integration](guides/testing.md) covers what you can check without one.
-
-## 1. Run the Door
-
-The Door is the popup that talks to the Wedgie. For now it runs on your machine, as part of the Knock Console.
+- **A checkout of [`getknock/knock`](https://github.com/getknock/knock)**, with `bun install` run in it. The packages aren't on npm yet, so you'll import them from the checkout, working in a folder beside it.
+- **To knock:** a Wedgie that's set up in the [Knock Console](https://getknock.dev), meaning named and bound to a human, and Chrome or another Chromium browser on a desktop.
 
 ```bash
-cd knock
-bun install
-cd apps/door && bun run dev
+git clone https://github.com/getknock/knock
+cd knock && bun install && cd ..
 ```
 
-The Console and its Door are now at `http://localhost:3000`. If your Wedgie isn't set up yet, open `http://localhost:3000` and follow the Console's four steps: connect the Wedgie, choose its name, bind it with World ID, then name it in ENS. Binding also needs knockd, Knock's own signer, running beside the Console with Knock's World ID keys; sites never talk to it.
+> [!NOTE]
+> You can build all of this without a Wedgie. You need one only at step 3, to press green. [Test your integration](guides/testing.md) covers what you can check without one.
 
-## 2. Check knocks in your server
+## 1. Check knocks in your server
 
 Your server checks each knock with `@knock-dev/verify`, Knock's eight checks as a TypeScript package. It gives out a challenge before each knock, then checks what the Wedgie signed against ENS and World Chain.
 
@@ -83,7 +76,7 @@ Bun.serve({
 console.log('Open http://localhost:5173')
 ```
 
-The package isn't on npm yet, so the server imports it from your checkout, which `bun install` set up in step 1.
+The package isn't on npm yet, so the server imports it from your checkout.
 
 The verifier checks knocks for one origin: the scheme, host and port your page is served from. Here that's `http://localhost:5173`, where this server serves the page. It reads both chains through public RPCs unless you give it your own, and it needs no keys.
 
@@ -91,9 +84,9 @@ The verifier checks knocks for one origin: the scheme, host and port your page i
 
 If your server isn't JavaScript, run [`knock-verifier`](guides/verifier.md) beside it instead. It runs the same checks as a small Rust service, and your server asks it over HTTP.
 
-## 3. Add the button
+## 2. Add the button
 
-The page is two files beside `server.ts`. It imports door-sdk, the browser side of Knock, from your checkout too.
+The page is two files beside `server.ts`. It imports door-sdk, the browser side of Knock, from your checkout too. door-sdk opens Knock's Door, at `https://door.getknock.dev`: the popup that talks to the Wedgie over USB. There's nothing to run for it.
 
 ```html title="index.html"
 <!doctype html>
@@ -152,9 +145,9 @@ button.addEventListener('click', async () => {
 
 The page only shows what the server decided. Your server is what lets someone in, counts a vote or starts a session, so it never takes the page's word for who got in.
 
-## 4. Knock
+## 3. Knock
 
-Start the server, with the Door still running:
+Start the server:
 
 ```bash
 bun server.ts
@@ -162,7 +155,7 @@ bun server.ts
 
 Open `http://localhost:5173` and press the button.
 
-1. The Door opens as a popup. The first time, it asks you to connect the Wedgie, and the browser asks which serial device to use.
+1. The Door opens as a popup, from `door.getknock.dev`. The first time, it asks you to connect the Wedgie, and the browser asks which serial device to use.
 2. The Wedgie shows **KNOCK**: the name it knocks as, and `http://localhost:5173`, the origin the Door saw.
 3. Press green. The Door closes, and your page says `In: wedgie.itzraj.eth`, or whichever name your Wedgie has.
 4. Press the button again and press green again. This time your server turns the knock away at check 8: `this human has done enter here already`.

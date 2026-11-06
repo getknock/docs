@@ -89,7 +89,7 @@ cargo test -p knock-verify
 
 ## With a Wedgie
 
-Run the Door on `http://localhost:3000`, your page, and a verifier for your page's origin, then try each of these. Each row is one knock.
+Run your page and a verifier for your page's origin, then try each of these. Each row is one knock.
 
 | Do this | Expect |
 | --- | --- |

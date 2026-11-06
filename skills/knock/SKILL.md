@@ -19,7 +19,7 @@ Knock lets a site let in a real human, once. The person presses green on their *
 5. **Key the site's records by `knock.nullifier`**, the human, not by `name` or `key`. One human can own several Wedgies, and change names.
 6. **For "once per human", pass `action`** to `verify()` or `/verify`, such as `"enter"`: 1 to 32 characters of `a-z`, `0-9` and `-`. Leave it out when any number of knocks is fine.
 7. **Say what happened, in the API's own words.** Show a `KnockError`'s `message`, or a refusal's `why`. Show nothing for `rejected` (red on the Wedgie) or `closed` (Door closed).
-8. **Don't invent packages or install commands.** door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io. The repo, `getknock/knock`, is private: use a checkout.
+8. **Don't invent packages or install commands.** door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io: use a checkout of `getknock/knock`, or depend on the repo with git.
 
 ## Workflow
 
@@ -196,14 +196,14 @@ Every `KnockError` code and every refusal, with what to show, is in [reference/r
 ### 8. Check it, and hand over
 
 - Run the project's typecheck, lint and tests.
-- Start the Door (`cd apps/door && bun run dev` in the Knock checkout, on `http://localhost:3000`), the verifier, and the site.
+- Start the verifier and the site. The Door is Knock's, at `https://door.getknock.dev`, so there's nothing to start for it.
 - A knock that gets in needs a person to press green on a set-up Wedgie in a desktop Chromium browser. You can't do that: tell the user what to run and what they should see, such as "In: wedgie.itzraj.eth", and "already done" on a second knock with the same action.
 
 ## Tell the user
 
 Say these plainly when they matter to the site:
 
-- The Door runs locally for now (`http://localhost:3000`, door-sdk's `DOOR`). A hosted Door isn't there yet, but a site can serve its own copy: https://docs.getknock.dev/self-host/door.
+- Knocks go through Knock's Door, `https://door.getknock.dev` (door-sdk's `DOOR`), unless the site serves its own copy: https://docs.getknock.dev/self-host/door.
 - Knocking needs a desktop Chromium browser. Firefox, Safari and phones can't knock.
 - The nullifier is public in ENS and the same on every site, so sites can tell the same human visited each.
 - A Wedgie has no PIN: whoever holds it can knock until its owner kills or revokes its name, which needs only their wallet.

@@ -19,7 +19,7 @@ cd apps/bouncer
 bun run dev
 ```
 
-The club is at `http://localhost:3001` and keeps its records in `human-club.db` beside it. Knocks go through the Door at `http://localhost:3000`: run the Console and Door's dev server too (`bun run dev` in `apps/door`), or set `NEXT_PUBLIC_DOOR` to a Door that's up.
+The club is at `http://localhost:3001` and keeps its records in `human-club.db` beside it. In development, knocks go through the Door at `http://localhost:3000`: run the Console and Door's dev server too (`bun run dev` in `apps/door`), or set `NEXT_PUBLIC_DOOR=https://door.getknock.dev` to use Knock's.
 
 ## On Vercel, with Turso
 
@@ -33,18 +33,9 @@ The club is at `http://localhost:3001` and keeps its records in `human-club.db` 
 
    The club makes its tables itself, the first time it opens the database.
 
-2. **Make the project.** In Vercel, import your copy of `getknock/knock`, then set:
+2. **Make the project.** In Vercel, import your copy of `getknock/knock` and set the Root Directory to `apps/bouncer`. [`apps/bouncer/vercel.json`](https://github.com/getknock/knock/blob/main/apps/bouncer/vercel.json) sets the rest: the install runs at the repo's root, because the club uses Knock's packages from the same workspace, then `bun run build`.
 
-   | Field | Value |
-   | --- | --- |
-   | Root Directory | `apps/bouncer` |
-   | Framework | Next.js |
-   | Install Command | `cd ../.. && bun install` |
-   | Build Command | `bun run build` |
-
-   The install runs at the repo's root because the club uses Knock's packages from the same workspace.
-
-3. **Set its environment variables**, for Production: `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` from step 1, `CLUB_ORIGIN` set to the club's address, and `NEXT_PUBLIC_DOOR` to the Door's. The rest are in [Settings](#settings).
+3. **Set its environment variables**, for Production: `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` from step 1, and `CLUB_ORIGIN` set to the club's address. The rest are in [Settings](#settings).
 
 4. **Deploy**, then add your domain to the project. If the domain changes, change `CLUB_ORIGIN` with it and deploy again.
 
@@ -73,7 +64,7 @@ Put it behind a proxy that serves HTTPS, as for [knockd](knockd.md#put-it-behind
 | `CLUB_ORIGIN` | none: needed in production | The club's origin, exactly as browsers send it, such as `https://club.example`. Wedgies sign for it, and the club takes no knock signed for another. In development, the address the request came to. |
 | `TURSO_DATABASE_URL` | `file:human-club.db` | The database: `libsql://…` for Turso, or `file:…` for a SQLite file. Needed on Vercel. |
 | `TURSO_AUTH_TOKEN` | none | Turso's token for that database. |
-| `NEXT_PUBLIC_DOOR` | `http://localhost:3000` | The Door knocks go through: Knock's, or [your own](door.md). |
+| `NEXT_PUBLIC_DOOR` | Knock's, `https://door.getknock.dev`; in development, `http://localhost:3000` | The Door knocks go through: Knock's, or [your own](door.md). |
 | `CLUB_ETH_RPC` | `https://ethereum-rpc.publicnode.com` | A mainnet RPC: for ENS, and to check gifts. |
 | `CLUB_WORLD_RPC` | `https://worldchain-mainnet.g.alchemy.com/public` | A World Chain RPC: for bindings. |
 | `CLUB_STRICT` | `off` | Whether a binding must be final first: `off`, `on` (safe) or `finalized`. [Strict mode](../guides/strict-mode.md) explains. |

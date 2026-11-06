@@ -19,7 +19,7 @@ function knock(o: KnockOptions): Promise<Assertion>
 type KnockOptions = {
   challenge: Hex | Promise<Hex> // the verifier's challenge, or a promise of it
   mode?: 1                      // Bound; mode 2 isn't offered
-  door?: string                 // default DOOR = 'http://localhost:3000'
+  door?: string                 // default DOOR = 'https://door.getknock.dev'
   timeoutMs?: number            // default 180_000, presses included
 }
 
@@ -158,7 +158,7 @@ By default a binding counts once its World Chain transaction is in a block. `VER
 ## knock-verify (Rust)
 
 ```toml
-knock-verify = { git = "https://github.com/getknock/knock" } # private: needs git credentials
+knock-verify = { git = "https://github.com/getknock/knock" }
 ```
 
 ```rust

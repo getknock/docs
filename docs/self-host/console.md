@@ -13,12 +13,13 @@ The Console and the [Door](door.md) are one app. Set the Console's settings as y
 bun install
 cd apps/door
 NEXT_PUBLIC_KNOCKD=https://knockd.example \
-NEXT_PUBLIC_KNOCKD_RP=https://signer.example \
 NEXT_PUBLIC_ETH_RPC=https://your-mainnet-rpc.example \
 bun run build
 ```
 
-Then serve `apps/door/out/` on HTTPS, as [Host the Door](door.md#serve-it) says. The Console is at `/`.
+Then serve `apps/door/out/` on HTTPS, as [Host the Door](door.md#serve-it) says. The Console is at `/`. On Vercel, set these settings in the project's environment variables, for Production, before it builds.
+
+With no settings at all, it's a Console on Knock's network that uses Knock's knockd for everything. That example relays bindings through your own knockd and still gets its World ID requests signed by Knock's, which is the only one that can sign them.
 
 ## Settings
 
@@ -26,13 +27,13 @@ They're read when it's built, so build again to change one.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| `NEXT_PUBLIC_KNOCKD` | `http://127.0.0.1:8787` | The knockd the Console relays bindings through and looks them up with: Knock's, or [your own](knockd.md). |
-| `NEXT_PUBLIC_KNOCKD_RP` | `NEXT_PUBLIC_KNOCKD` | The knockd that signs World ID requests. On Knock's network that's Knock's knockd, the only one that holds Knock's World ID key; it isn't public yet. On [a network of your own](own-network.md), yours. |
+| `NEXT_PUBLIC_KNOCKD` | Knock's, `https://knockd.getknock.dev`; on localhost, `http://127.0.0.1:8787` | The knockd the Console relays bindings through and looks them up with: Knock's, or [your own](knockd.md). |
+| `NEXT_PUBLIC_KNOCKD_RP` | Knock's, `https://knockd.getknock.dev`; on localhost, `http://127.0.0.1:8787` | The knockd that signs World ID requests. On Knock's network that's Knock's, the only one that holds Knock's World ID key. On [a network of your own](own-network.md), yours. |
 | `NEXT_PUBLIC_ETH_RPC` | `https://ethereum-rpc.publicnode.com` | A mainnet RPC, for reading ENS when no wallet is connected, and for simulating transactions the wallet's own RPC won't. |
 | `NEXT_PUBLIC_DOCS` | these docs | Where its links to the docs go. |
 | `NEXT_PUBLIC_CLUB` | the Human Club | Where its link to the Human Club goes. |
 
-Each knockd the Console calls has to let the Console's origin in: its `KNOCKD_ORIGINS` lists it, or is `*`.
+Each knockd the Console calls has to let the Console's origin in: its `KNOCKD_ORIGINS` lists it, or is `*`, as Knock's is.
 
 The KnockBindings it binds with, staging's and production's, come from `contracts/deployments/480.json` in the checkout it's built from. Knock's are there. A network of your own puts its own there before building.
 

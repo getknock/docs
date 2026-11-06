@@ -30,18 +30,19 @@ It doesn't tell you who the person is. You get the Wedgie's name and the human's
 | `@knock-dev/verify` | The checks as a TypeScript package, for a server that runs JavaScript: Node, Bun, Deno, serverless. | [`packages/verify`](https://github.com/getknock/knock/blob/main/packages/verify/src/index.ts) |
 | `knock-verifier` | Your verifier: `POST /challenge`, `POST /verify` and `GET /health`, with SQLite for what's been used. | [`server/verifier`](https://github.com/getknock/knock/blob/main/server/verifier/src/main.rs) |
 | `knock-verify` | The checks themselves, as a Rust library, for your own server. | [`crates/knock-verify`](https://github.com/getknock/knock/blob/main/crates/knock-verify/src/lib.rs) |
-| The Door | Knock's popup at `/knock`. It talks to the Wedgie over USB, from the browser. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/knock/Door.tsx) |
-| The Knock Console | Where a person sets up their Wedgie: its name, its binding, and its records in ENS; and the kill switch. Sites never call it. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/console/Console.tsx) |
+| The Door | Knock's popup, at `https://door.getknock.dev/knock`. It talks to the Wedgie over USB, from the browser. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/knock/Door.tsx) |
+| The Knock Console | Where a person sets up their Wedgie, at `https://getknock.dev`: its name, its binding, and its records in ENS; and the kill switch. Sites never call it. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/console/Console.tsx) |
 | knockd | Relays a Wedgie's binding to World Chain, and signs World ID requests, while a person sets it up. Sites never call it. | [`server/knockd`](https://github.com/getknock/knock/blob/main/server/knockd/src/main.rs) |
 | `@knock-dev/protocol` | The messages a Wedgie signs (EIP-712), key helpers, and test vectors. | [`packages/protocol`](https://github.com/getknock/knock/blob/main/packages/protocol/src/index.ts) |
 | The Human Club | A demo site: petitions and fundraisers where each human signs once, checked with `@knock-dev/verify`. | [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/lib/club.ts) |
+
+Every part is open source, in [`getknock/knock`](https://github.com/getknock/knock), and you can [host any of them yourself](self-host/overview.md).
 
 ## Where Knock is today
 
 Knock is new. Read this before you plan around it:
 
-- **Nothing is published yet.** The repo, `getknock/knock`, is private, every package is at 0.1.0, door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io. The [quickstart](quickstart.md) uses a checkout.
-- **The Door runs locally**, at `http://localhost:3000`, and door-sdk opens it there unless you pass `door`. A hosted Door comes later, and meanwhile you can [host one yourself](self-host/door.md).
+- **Nothing is on a registry yet.** Every package is at 0.1.0: door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io. The [quickstart](quickstart.md) uses a checkout of [`getknock/knock`](https://github.com/getknock/knock).
 - **Knocking needs a desktop Chromium browser**, such as Chrome, Edge, Brave or Arc. The Door reaches the Wedgie over Web Serial, which Firefox, Safari and phones don't have.
 - **Only one kind of binding counts**: those made on KnockBinding v3's production deployment on World Chain. Bindings from World ID's Simulator (staging) never count.
 - **One mode.** Mode 1, Bound, takes the human from the Wedgie's binding. Mode 2, Fresh, a new World ID proof with each knock, isn't offered.

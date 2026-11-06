@@ -5,7 +5,7 @@ description: The Door is static files. Build it, serve it on HTTPS, and point do
 
 The Door is the popup door-sdk opens when someone knocks. It talks to the Wedgie over Web Serial, hands it your challenge and your origin, and hands back what the Wedgie signed. It calls no server and holds no keys, so any static host can serve it.
 
-You might host it to keep Knock's machines out of the path of your knocks, to serve it from your own domain, or because Knock doesn't host one yet.
+Knock's is at `https://door.getknock.dev`, and door-sdk opens it unless told otherwise. You might host your own to keep Knock's machines out of the path of your knocks, or to serve it from your own domain.
 
 ## Build it
 
@@ -23,10 +23,14 @@ bun run build
 
 Put `out/` on any static host that serves HTTPS:
 
-- **Vercel, Netlify or Cloudflare Pages**: set the project's root to `apps/door`, the build command to `bun run build`, and the output folder to `out`. They serve `/knock` from `knock.html` as they are.
+- **Vercel**: import your copy of `getknock/knock` and set the project's Root Directory to `apps/door`. [`apps/door/vercel.json`](https://github.com/getknock/knock/blob/main/apps/door/vercel.json) sets the rest: the install at the repo's root, then `bun run build`.
+- **Netlify or Cloudflare Pages**: set the project's root to `apps/door`, the build command to `bun run build`, and the output folder to `out`.
+- Each of them serves `/knock` from `knock.html` as it is.
 - **Your own server**: copy `out/` there and have `/knock` serve `knock.html`. With nginx, `try_files $uri $uri.html $uri/ =404;` in the site's `location /`.
 
 It must be HTTPS, because browsers only offer Web Serial to secure pages. `http://localhost` counts as secure, for development.
+
+Knock serves its Door and its Console from one Vercel project with two domains, `door.getknock.dev` and `getknock.dev`. `vercel.json` sends `door.getknock.dev/` to the Console, so each address shows one thing.
 
 ## Point door-sdk at it
 
