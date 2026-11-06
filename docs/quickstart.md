@@ -130,7 +130,7 @@ That second answer is `action: 'enter'` at work: the verifier keeps one entry pe
 ## What you have
 
 - A challenge per knock, so a knock can't be replayed or used on another site.
-- A verifier that read the name's records from ENS, the binding from World Chain, and checked the Wedgie's signature over all of it.
+- A verifier that read the name's records from ENS, the binding from World Chain, and checked the Wedgie's signature.
 - One entry per human for `enter`.
 
 ## Next

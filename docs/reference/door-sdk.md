@@ -114,7 +114,7 @@ The Door passes the Wedgie's other codes on as they are. [Add a Knock button](..
 const DOOR = 'http://localhost:3000'
 ```
 
-The Door door-sdk opens unless you pass `door`: Knock's own, which runs locally for now, as part of the Knock Console.
+The Door that door-sdk opens unless you pass `door`: Knock's own, which runs locally for now, as part of the Knock Console.
 
 ## Hex
 
