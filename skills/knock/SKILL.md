@@ -177,7 +177,7 @@ Say these plainly when they matter to the site:
 - The Door runs locally for now (`http://localhost:3000`, door-sdk's `DOOR`). A hosted Door isn't there yet.
 - Knocking needs a desktop Chromium browser. Firefox, Safari and phones can't knock.
 - The nullifier is public in ENS and the same on every site, so sites can tell the same human visited each.
-- A Wedgie has no PIN: whoever holds it can knock until its owner revokes it.
+- A Wedgie has no PIN: whoever holds it can knock until its owner kills or revokes its name, which needs only their wallet.
 - Only bindings on KnockBinding v3, production, count. World ID Simulator bindings never do.
 
 ## More

@@ -101,7 +101,7 @@ Run the Door on `http://localhost:3000`, your page, and a verifier for your page
 | Leave the KNOCK screen for 2 minutes | `KnockError` `timeout`, from the Wedgie |
 | Stop your verifier, then knock | `KnockError` `challenge` |
 | Keep the Wedgie connected in the Console's tab, then knock | The Door asks you to disconnect it there |
-| Revoke the name in the Console, then knock | Check 3: `revoked` |
+| Set the name's `knock.status` to `revoked` in the ENS app, then knock | Check 3: `revoked` |
 | Kill the name in the Console, then knock | Check 3: `no_name` |
 | Name a Wedgie, then knock within a minute | Check 3: `records_changing`, then in a minute later |
 | With `VERIFIER_STRICT=on`, knock within minutes of binding | Check 6: `binding_not_final` |

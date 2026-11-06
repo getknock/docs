@@ -16,7 +16,7 @@ When your verifier lets a knock in, it has checked that:
 
 ## What it doesn't prove
 
-- **Who pressed.** The Wedgie has no PIN, so anyone holding it can knock as its owner. If it's lost or stolen, its owner should revoke or kill the name in the Knock Console. Until they do, it knocks for whoever has it.
+- **Who pressed.** The Wedgie has no PIN, so anyone holding it can knock as its owner. If it's lost or stolen, its owner kills its name with the Knock Console's kill switch, which needs only the wallet that holds the name, not the Wedgie. Or they revoke the name in the [ENS app](https://app.ens.domains), by setting its `knock.status` record to `revoked`. Until then, it knocks for whoever has it.
 - **That one human is one person at a keyboard.** World ID proves the binding was made by a unique human. It can't stop a human from binding a Wedgie and handing it to someone else, or being paid to.
 - **That the origin on screen is right.** The Wedgie shows the origin the Door read from the browser, labelled *unverified: the Door says so*, since the Wedgie can't see the browser itself. On a computer that's been compromised, the Door could be made to ask for a knock for another site. The screen still shows that site, so people should read it before pressing.
 - **That nothing else on the Wedgie can use its key.** When a Wedgie's `knock.sc` record is `S1`, any app installed on the Wedgie can use its chip. Install apps you trust.
@@ -43,8 +43,8 @@ No one can see where a Wedgie knocks, apart from the sites it knocks on. Mode 2,
 
 ## Revocation
 
-- **Revoked:** when a name's `knock.status` is `revoked`, every verifier refuses its knocks at once, since check 3 reads the status at the latest block. A verifier that has seen a key revoked keeps refusing it, even if the name is switched back on.
-- **Killed:** the name's records are gone, so knocks fail check 3 as `no_name`.
+- **Revoked:** when a name's `knock.status` is `revoked`, every verifier refuses its knocks at once, since check 3 reads the status at the latest block. A verifier that has seen a key revoked keeps refusing it, even if the name is switched back on. The owner sets the record in the [ENS app](https://app.ens.domains); the Console has no revoke.
+- **Killed:** the Console's kill switch unregisters the name and unlinks its records, from the owner's wallet, with or without the Wedgie. Knocks then fail check 3 as `no_name`.
 - **Expired:** an ENS name that expires reads as empty, so it fails the same way.
 - **Old bindings:** a binding whose World ID proof is older than `VERIFIER_MAX_BINDING_DAYS`, 365 by default, fails check 6.
 

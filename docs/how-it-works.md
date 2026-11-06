@@ -28,7 +28,7 @@ Before a Wedgie can knock, its owner sets it up in the Knock Console, in this or
 | `knock.nullifier` | The human's nullifier, as a 32-byte word in hex |
 | `knock.poh` | The binding: `eip155:480:tx:` and its transaction hash |
 
-The owner can revoke the name from the Console, and its knocks bounce at once. Or they can kill it: the name leaves ENS and the Wedgie forgets it, so it can be set up again from scratch. One human can bind several Wedgies, each under its own name.
+The owner can kill the name with the Console's kill switch, from the wallet that holds it: the name leaves ENS, and its knocks bounce at once. The Wedgie needn't be there, so a lost or stolen one can be stopped too. If it is there, it forgets the name and its binding, and can be set up again from scratch. The owner can also revoke the name in the [ENS app](https://app.ens.domains), by setting `knock.status` to `revoked`. One human can bind several Wedgies, each under its own name.
 
 ## A knock, step by step
 
