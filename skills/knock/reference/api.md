@@ -168,7 +168,7 @@ let verifier = Verifier::new(
     chain,                                         // impl knock_verify::Chain
     Store::open("knock.db")?,                      // ":memory:" for tests
     "https://club.example".to_string(),
-    accepted_binding().map_err(anyhow::Error::msg)?,
+    accepted_binding(),                            // KnockBinding v3, production
     365 * 86_400,
 )
 .strict(Strict::Off);

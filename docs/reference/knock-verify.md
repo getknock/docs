@@ -31,7 +31,7 @@ pub async fn example(chain: MyChain, assertion: serde_json::Value) -> anyhow::Re
         chain,                                     // your Chain: mainnet and World Chain
         Store::open("knock.db")?,                  // or ":memory:" for tests
         "https://club.example".to_string(),        // the origin knocks must be for
-        accepted_binding().map_err(anyhow::Error::msg)?, // KnockBinding v3, production
+        accepted_binding(),                        // KnockBinding v3, production
         365 * 86_400,                              // the oldest binding it takes, in seconds
     )
     .strict(Strict::Off);
@@ -160,7 +160,8 @@ Each check is a function you can call on its own, for tests or for a verifier of
 | `parse_key(&str)` | A `knock.key`: 33 bytes, compressed P-256, as hex. Returns the bytes, the key and its hash. |
 | `check_records(name, &deep, &latest)` | V3, given the records 3 blocks deep and at the latest block. |
 | `check_binding(Option<&Receipt>, &Wanted)` | V6, given the binding's receipt. |
-| `accepted_binding()` | The KnockBinding whose bindings count: v3, production, from the repo's deployments. |
+| `accepted_binding()` | `KNOCK_BINDING`: the KnockBinding whose bindings count. |
+| `KNOCK_BINDING` | KnockBinding v3's production address on World Chain, the one whose `Bound` logs count. A network of its own passes its own to `Verifier::new`. |
 
 ## Testing with a stand-in chain
 
