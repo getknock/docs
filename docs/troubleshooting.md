@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: What to do when the Door won't open, the Wedgie won't answer, or your verifier turns a knock away. By symptom, and by refusal.
+description: What to do when the Door won't open, the Wedgie won't answer, the Console can't install Knock, or your verifier turns a knock away. By symptom, and by refusal.
 ---
 
 Find what you see, below. For the full list of refusals, see [Checks and refusals](reference/checks.md).
@@ -57,6 +57,24 @@ Red on the Wedgie: its owner said no. Show nothing, and let them knock again.
 ### `not_ready`
 
 The Door couldn't talk to the Wedgie: it was unplugged, or went away during the knock. Plug it in, and knock again.
+
+## Installing Knock
+
+### "No green press on the Wedgie"
+
+Red was pressed on FULL CONTROL?, or nothing was pressed for a minute. Nothing changed on the Wedgie. Press Install in the Console again, then green.
+
+### "Your Wedgie said no to this computer before"
+
+After a red press, the Wedgie doesn't ask again until it's unplugged. Unplug it, plug it back in, and install again.
+
+### "The install stopped"
+
+A file didn't copy, or the Wedgie stopped answering. The Wedgie restarts with the app it had, the Console finds it again, and you can install again. If the old app's files had come off first, to make room, the Wedgie has no app until Knock is on it. If the message says to unplug the Wedgie, do that first.
+
+### "The Console couldn't read Knock from getknock/wedgie"
+
+GitHub didn't answer, or the repo's `wedgie.json` breaks wedgie.dev's rules for an app. Try again in a minute.
 
 ## Your verifier
 

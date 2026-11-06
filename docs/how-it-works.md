@@ -16,9 +16,10 @@ description: Who does what in a knock, from the click to the verifier's answer, 
 
 Before a Wedgie can knock, its owner sets it up in the Knock Console, in this order:
 
-1. **The key.** The Wedgie makes it on the chip, after a green press.
-2. **The binding.** The person proves with World ID that they're a human, and the Wedgie signs a request to bind its key. KnockBinding checks the proof on World Chain and logs `Bound(nullifier, keyHash, node, expiresAtMin)`: this key, this human, this name. The nullifier is the human's number for Knock's World ID action: the same for every Wedgie they bind.
-3. **The name.** The owner's wallet sets the name's Knock records in ENS. `knock.poh` points at the binding's transaction, so the binding comes first.
+1. **The Knock app.** If the Wedgie runs another app, or none, the Console puts Knock on it from the latest commit of [`getknock/wedgie`](https://github.com/getknock/wedgie), after a green press on the Wedgie's red FULL CONTROL? question. A Wedgie with an older Knock is offered the newer one the same way.
+2. **The key.** The Wedgie makes it on the chip, after a green press.
+3. **The binding.** The person proves with World ID that they're a human, and the Wedgie signs a request to bind its key. KnockBinding checks the proof on World Chain and logs `Bound(nullifier, keyHash, node, expiresAtMin)`: this key, this human, this name. The nullifier is the human's number for Knock's World ID action: the same for every Wedgie they bind.
+4. **The name.** The owner's wallet sets the name's Knock records in ENS. `knock.poh` points at the binding's transaction, so the binding comes first.
 
 | Record | Holds |
 | --- | --- |

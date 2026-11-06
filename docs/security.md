@@ -21,6 +21,7 @@ When your verifier lets a knock in, it has checked that:
 - **That the origin on screen is right.** The Wedgie shows the origin the Door read from the browser, labelled *unverified: the Door says so*, since the Wedgie can't see the browser itself. On a computer that's been compromised, the Door could be made to ask for a knock for another site. The screen still shows that site, so people should read it before pressing.
 - **That nothing else on the Wedgie can use its key.** When a Wedgie's `knock.sc` record is `S1`, any app installed on the Wedgie can use its chip. Install apps you trust.
 - **That the Wedgie is a hardware wallet.** It's a small hackable device, and its Knock app hasn't been audited.
+- **That its Knock app was reviewed.** The Console installs the latest commit of `getknock/wedgie` as it is, the way wedgie.dev installs any app from a repo: wedgie.dev hasn't reviewed or signed it, and the Wedgie draws a red border while it runs it. Installing takes a green press on the Wedgie's red FULL CONTROL? question, which gives the page full control of the Wedgie until it restarts. Press green only after pressing Install on a Console you trust.
 
 ## What's public
 

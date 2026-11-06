@@ -15,7 +15,7 @@ Nothing in Knock has to run on Knock's servers. Every part is open source and bu
 | A verifier | Checks knocks for one site | Each site | [`@knock-dev/verify`](../guides/verify-in-your-server.md) in your server, or [`knock-verifier`](../guides/verifier.md) beside it |
 | [The Human Club](human-club.md) | The demo site: petitions and fundraisers for humans | Knock, or anyone | Vercel and Turso, or any Node host |
 | These docs | This site | Knock, or anyone | Static files: `bun run build` in [`getknock/docs`](https://github.com/getknock/docs), then serve `out/` |
-| The Knock app | Runs on the Wedgie | Its owner | Installed from a checkout of [`getknock/wedgie`](https://github.com/getknock/wedgie) with `wedgie.py install .`, or from wedgie.dev as an app from that repo |
+| The Knock app | Runs on the Wedgie | Its owner | Installed from the [Console](console.md#the-knock-app-it-installs), which puts on that repo's latest commit; from a checkout of [`getknock/wedgie`](https://github.com/getknock/wedgie) with `wedgie.py install .`; or from wedgie.dev as an app from that repo |
 
 ## What doesn't need Knock at all
 
