@@ -3,7 +3,7 @@ title: Host the Human Club
 description: The Human Club is a Next.js app with a libSQL database. Run it on Vercel with Turso, or on any server that runs Node.
 ---
 
-The Human Club is Knock's demo site: petitions and fundraisers for humans only, where each human signs a petition once. It's [`apps/bouncer`](https://github.com/getknock/knock/tree/main/apps/bouncer) in `getknock/knock`, a Next.js app that checks knocks in its own functions with [`@knock-dev/verify`](../guides/verify-in-your-server.md) and keeps its records in a libSQL database. A copy of your own is a whole club of its own, with its own petitions, fundraisers and members.
+The Human Club is Knock's demo site: petitions and fundraisers for humans only, where each human signs a petition once. It's [`apps/bouncer`](https://github.com/getknock/knock/tree/main/apps/bouncer) in `getknock/knock`, a Next.js app that checks knocks in its own functions with [`@knock-dev/verify`](../guides/verify-in-your-server.md) and keeps its records in a libSQL database. A visitor without a Wedgie can use World ID and a wallet instead: the club proves Knock's own action or World ID session, so someone is the same human whichever way they come in. Knock's knockd signs those requests and sends a visitor's first binding. A copy of your own is a whole club of its own, with its own petitions, fundraisers and members.
 
 ## What you need
 
@@ -19,7 +19,7 @@ cd apps/bouncer
 bun run dev
 ```
 
-The club is at `http://localhost:3001` and keeps its records in `human-club.db` beside it. In development, knocks go through the Door at `http://localhost:3000`: run the Console and Door's dev server too (`bun run dev` in `apps/door`), or set `NEXT_PUBLIC_DOOR=https://door.getknock.dev` to use Knock's.
+The club is at `http://localhost:3001` and keeps its records in `human-club.db` beside it. In development, knocks go through the Door at `http://localhost:3000`: run the Console and Door's dev server too (`bun run dev` in `apps/door`), or set `NEXT_PUBLIC_DOOR=https://door.getknock.dev` to use Knock's. The World ID way calls knockd at `http://localhost:8787`: [run one](knockd.md), or set `CLUB_KNOCKD=https://knockd.getknock.dev` to use Knock's. Set `CLUB_WORLD_ENV=staging` only when you're testing with World's Simulator.
 
 ## On Vercel, with Turso
 
@@ -65,16 +65,18 @@ Put it behind a proxy that serves HTTPS, as for [knockd](knockd.md#put-it-behind
 | `TURSO_DATABASE_URL` | `file:human-club.db` | The database: `libsql://…` for Turso, or `file:…` for a SQLite file. Needed on Vercel. |
 | `TURSO_AUTH_TOKEN` | none | Turso's token for that database. |
 | `NEXT_PUBLIC_DOOR` | Knock's, `https://door.getknock.dev`; in development, `http://localhost:3000` | The Door knocks go through: Knock's, or [your own](door.md). |
-| `CLUB_ETH_RPC` | `https://ethereum-rpc.publicnode.com` | A mainnet RPC: for ENS, and to check gifts. |
-| `CLUB_WORLD_RPC` | `https://worldchain-mainnet.g.alchemy.com/public` | A World Chain RPC: for bindings. |
+| `CLUB_ETH_RPC` | `https://ethereum-rpc.publicnode.com` | A mainnet RPC: for ENS, wallet sign-ins, and to check gifts. |
+| `CLUB_WORLD_RPC` | `https://worldchain-mainnet.g.alchemy.com/public` | A World Chain RPC: for bindings and World ID session proofs. |
+| `CLUB_KNOCKD` | Knock's, `https://knockd.getknock.dev`; in development, `http://localhost:8787` | The knockd that signs World ID requests and sends a World ID visitor's first binding. |
+| `CLUB_WORLD_ENV` | `production` | Where World ID visitors prove themselves: `production` for World App, or `staging` for World's Simulator. |
 | `CLUB_STRICT` | `off` | Whether a binding must be final first: `off`, `on` (safe) or `finalized`. [Strict mode](../guides/strict-mode.md) explains. |
 | `CLUB_MAX_BINDING_DAYS` | `365` | How old a binding's World ID proof may be, in days. |
-| `CLUB_KNOCK_BINDING` | Knock's | The KnockBinding whose bindings count. Only for [a network of your own](own-network.md). |
+| `CLUB_KNOCK_BINDING` | Knock's | The KnockBinding whose bindings and sessions count. Only for [a network of your own](own-network.md). |
 
 Use your own RPCs for a club people use: the public ones are rate-limited, and the checks believe what they say. [Its RPCs](../guides/verifier.md#its-rpcs) says more.
 
 ## What it keeps
 
-For each human who has knocked: their nullifier, their Wedgie's name, and when they came. Then what they started, signed and gave, with their name beside it only where they chose to show it, and the gifts' transactions. A session is a random token in a cookie, which the club keeps only as a hash, for two weeks.
+For each human who has knocked or proved themselves with World ID: their nullifier, their name, and when they came. Then what they started, signed and gave, with their name beside it only where they chose to show it, and the gifts' transactions. A club session is a random token in a cookie, which the club keeps only as a hash, for two weeks. One that came in with World ID also keeps the wallet and World ID session id, so each later act can prove the same human.
 
-Nothing else: no email addresses, no IP addresses, no analytics. Whoever holds the database can see which nullifier did what, so keep its token as you'd keep a password.
+Nothing else: no email addresses, no IP addresses, no analytics. Whoever holds the database can see which nullifier did what and the World ID session ids, so keep its token as you'd keep a password.

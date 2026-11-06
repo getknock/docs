@@ -1,9 +1,9 @@
 ---
 title: Run knockd
-description: knockd relays bindings to World Chain and answers the Console's lookups. Build it, give it a World Chain RPC and a funded key, and point a Console at it.
+description: knockd relays bindings to World Chain, signs World ID requests and answers lookups. Build it, give it a World Chain RPC and a funded key, and point a Console or Human Club at it.
 ---
 
-knockd is the small server the [Console](console.md) needs while a person sets up a Wedgie. It does three things:
+knockd is the small server the [Console](console.md) needs while a person sets up a Wedgie, and the [Human Club](human-club.md) calls when someone comes in with World ID and a wallet. It does three things:
 
 - **It relays bindings.** When a Wedgie says yes to being bound to a human, knockd checks the Wedgie's signature and the human's World ID proof, then sends the binding to KnockBinding on World Chain and pays its gas.
 - **It answers lookups.** It reads a binding back from its transaction, finds a Wedgie's latest binding by its key, and finds a returning human's World ID session.

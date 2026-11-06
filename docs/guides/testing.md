@@ -111,7 +111,7 @@ Revoking and killing change the name for every site, so use a Wedgie set up for 
 
 ## The Human Club
 
-The Human Club is a whole Knock site: petitions and fundraisers where each human signs once, with the checks ticked off as they pass. It checks knocks in its own functions with `@knock-dev/verify`, so it needs no verifier beside it. It's in [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/lib/club.ts), and runs on port 3001:
+The Human Club is a whole Knock site: petitions and fundraisers where each human signs once, by a knock or by World ID and a wallet, with the checks ticked off as they pass. It checks knocks in its own functions with `@knock-dev/verify`, so it needs no verifier beside it. It's in [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/lib/club.ts), and runs on port 3001:
 
 ```bash
 # two terminals, from the root of the checkout

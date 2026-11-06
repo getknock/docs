@@ -32,9 +32,9 @@ It doesn't tell you who the person is. You get the Wedgie's name and the human's
 | `knock-verify` | The checks themselves, as a Rust library, for your own server. | [`crates/knock-verify`](https://github.com/getknock/knock/blob/main/crates/knock-verify/src/lib.rs) |
 | The Door | Knock's popup, at `https://door.getknock.dev/knock`. It talks to the Wedgie over USB, from the browser. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/knock/Door.tsx) |
 | The Knock Console | Where a person sets up their Wedgie, at `https://getknock.dev`: its name, its binding, and its records in ENS; and the kill switch. Sites never call it. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/console/Console.tsx) |
-| knockd | Relays a Wedgie's binding to World Chain, and signs World ID requests, while a person sets it up. Sites never call it. | [`server/knockd`](https://github.com/getknock/knock/blob/main/server/knockd/src/main.rs) |
+| knockd | Relays bindings to World Chain, and signs World ID requests, while a person sets up a Wedgie or comes into the Human Club with World ID. | [`server/knockd`](https://github.com/getknock/knock/blob/main/server/knockd/src/main.rs) |
 | `@knock-dev/protocol` | The messages a Wedgie signs (EIP-712), key helpers, and test vectors. | [`packages/protocol`](https://github.com/getknock/knock/blob/main/packages/protocol/src/index.ts) |
-| The Human Club | A demo site: petitions and fundraisers where each human signs once, checked with `@knock-dev/verify`. | [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/lib/club.ts) |
+| The Human Club | A demo site: petitions and fundraisers where each human signs once, by a knock or by World ID and a wallet. | [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/lib/club.ts) |
 
 Every part is open source, in [`getknock/knock`](https://github.com/getknock/knock), and you can [host any of them yourself](self-host/overview.md).
 
