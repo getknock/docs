@@ -22,6 +22,7 @@ export const NAV: { group: string; files: string[] }[] = [
     group: 'Guides',
     files: [
       'guides/knock-button.md',
+      'guides/verify-in-your-server.md',
       'guides/verifier.md',
       'guides/one-human-once.md',
       'guides/strict-mode.md',
@@ -32,10 +33,22 @@ export const NAV: { group: string; files: string[] }[] = [
     group: 'Reference',
     files: [
       'reference/door-sdk.md',
+      'reference/verify.md',
       'reference/verifier-api.md',
       'reference/knock-verify.md',
       'reference/checks.md',
       'reference/protocol.md',
+    ],
+  },
+  {
+    group: 'Self-host',
+    files: [
+      'self-host/overview.md',
+      'self-host/door.md',
+      'self-host/console.md',
+      'self-host/knockd.md',
+      'self-host/own-network.md',
+      'self-host/human-club.md',
     ],
   },
   { group: 'More', files: ['security.md', 'troubleshooting.md', 'agents.md'] },

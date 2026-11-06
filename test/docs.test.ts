@@ -132,7 +132,7 @@ describe('the verifier', () => {
   )
 
   test('every setting is documented, with its default, and nothing else is', () => {
-    expect(settings.size).toBe(7)
+    expect(settings.size).toBe(8)
     for (const file of ['docs/guides/verifier.md', 'skills/knock/reference/api.md']) {
       const rows = read(file)
         .split('\n')
@@ -293,7 +293,11 @@ describe('the examples', () => {
             noEmit: true,
             skipLibCheck: true,
             types: ['bun'],
-            paths: { '@knock-dev/door-sdk': [path.join(KNOCK, 'packages/door-sdk/src/index.ts')] },
+            paths: {
+              '@knock-dev/door-sdk': [path.join(KNOCK, 'packages/door-sdk/src/index.ts')],
+              '@knock-dev/verify': [path.join(KNOCK, 'packages/verify/src/index.ts')],
+              '@libsql/client': [path.join(KNOCK, 'packages/verify/node_modules/@libsql/client')],
+            },
           },
           include: ['**/*.ts', '**/*.tsx'],
         }),
@@ -333,6 +337,66 @@ describe('knock-verify', () => {
       expect(src).toContain(`pub const ${name}: u64 = ${value};`)
       expect(doc('reference/knock-verify.md')).toContain(`| \`${name}\` | \`${value}\` |`)
     }
+  })
+})
+
+describe('@knock-dev/verify', () => {
+  const src = code('packages/verify/src/index.ts')
+
+  test('every export is in its reference', () => {
+    const items = new Set(
+      [...src.matchAll(/^export (?:async )?(?:function|class|const|interface|type) ([A-Za-z_][A-Za-z0-9_]*)/gm)].map((m) => m[1]),
+    )
+    expect(items.size).toBeGreaterThan(30)
+    const md = doc('reference/verify.md')
+    const missing = [...items].filter((i) => !new RegExp(`\\b${i}\\b`).test(md))
+    expect(missing).toEqual([])
+  })
+
+  test('the constants the docs give are the package’s', () => {
+    for (const [name, value] of [
+      ['WORLD_CHAIN', '480'],
+      ['CHALLENGE_MS', '120_000'],
+      ['DEPTH', '3n'],
+      ['CACHE_MS', '60_000'],
+      ['MAX_BINDING_DAYS', '365'],
+    ]) {
+      expect(src).toContain(`export const ${name} = ${value}`)
+      expect(doc('reference/verify.md')).toContain(`| \`${name}\` | \`${value}\` |`)
+    }
+  })
+})
+
+/** The settings a part reads, each in the first column of its page's tables, and no setting it doesn't read */
+function documents(page: string, read: Set<string>, like: RegExp) {
+  const listed = new Set(firstColumn(doc(page)).filter((c) => like.test(c)))
+  expect([...listed].sort()).toEqual([...read].sort())
+}
+
+describe('self-hosting', () => {
+  test("knockd's settings are in its guide", () => {
+    const main = code('server/knockd/src/main.rs')
+    const read = new Set([...main.matchAll(/\b(?:std::env::var|var)\("([A-Z_]+)"\)/g)].map((m) => m[1]))
+    expect(read.size).toBeGreaterThanOrEqual(10)
+    documents('self-host/knockd.md', read, /^[A-Z][A-Z_]+$/)
+  })
+
+  test("the Console's settings are in its guide", () => {
+    const src = ['lib', 'app'].flatMap((d) => filesUnder(path.join(KNOCK, 'apps/door', d)).map((f) => code(path.join('apps/door', d, f))))
+    const read = new Set(src.flatMap((t) => [...t.matchAll(/process\.env\.(NEXT_PUBLIC_[A-Z_]+)/g)].map((m) => m[1])))
+    expect(read.size).toBeGreaterThanOrEqual(5)
+    documents('self-host/console.md', read, /^NEXT_PUBLIC_/)
+  })
+
+  test("the Human Club's settings are in its guide", () => {
+    const src = ['lib', 'app'].flatMap((d) =>
+      filesUnder(path.join(KNOCK, 'apps/bouncer', d)).map((f) => code(path.join('apps/bouncer', d, f))),
+    )
+    const read = new Set(
+      src.flatMap((t) => [...t.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1])).filter((v) => v !== 'NODE_ENV' && v !== 'VERCEL'),
+    )
+    expect(read.size).toBeGreaterThanOrEqual(8)
+    documents('self-host/human-club.md', read, /^[A-Z][A-Z_]+$/)
   })
 })
 

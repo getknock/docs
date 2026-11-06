@@ -123,7 +123,7 @@ What the verifier checks knocks for.
 
 | Field | What it is |
 | --- | --- |
-| `binding` | The KnockBinding whose bindings count: v3, production, on World Chain. |
+| `binding` | The KnockBinding whose bindings count: Knock's v3, production, on World Chain, or the one `VERIFIER_KNOCK_BINDING` names. |
 | `maxBindingDays` | `VERIFIER_MAX_BINDING_DAYS`. |
 | `origin` | `VERIFIER_ORIGIN`. |
 | `strict` | `off`, `safe` or `finalized`. [Strict mode](../guides/strict-mode.md). |

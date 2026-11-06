@@ -5,6 +5,8 @@ description: knock-verifier is the service that decides whether a knock gets in.
 
 `knock-verifier` is a small Rust service you run beside your site. It gives out challenges and checks knocks for one origin, your site's, and keeps what it has seen in a SQLite file. It reads ENS on Ethereum mainnet and bindings on World Chain through RPCs, needs no keys, and never calls Knock.
 
+If your server runs JavaScript or TypeScript, you don't need the service: [`@knock-dev/verify`](verify-in-your-server.md) runs the same checks inside your server.
+
 ## Build it
 
 From the root of a checkout of `getknock/knock`:
@@ -29,8 +31,9 @@ Everything is an environment variable, and only `VERIFIER_ORIGIN` usually needs 
 | `VERIFIER_WORLD_RPC` | `https://worldchain-mainnet.g.alchemy.com/public` | A World Chain RPC, for bindings. |
 | `VERIFIER_MAX_BINDING_DAYS` | `365` | How old a binding's World ID proof may be, in days. Older bindings fail check 6 as `binding_expired`. |
 | `VERIFIER_STRICT` | `off` | Whether a binding must be final on World Chain first: `off`, `on` (or `safe`), or `finalized`. [Strict mode](strict-mode.md) explains the choice. |
+| `VERIFIER_KNOCK_BINDING` | `knock` | The KnockBinding whose bindings count: `knock` for Knock's, or the address of [a network of your own](../self-host/own-network.md)'s. |
 
-The default origin is the Human Club's, so set yours:
+The default origin is `http://localhost:3001`, for development, so set yours:
 
 ```bash
 VERIFIER_ORIGIN=https://club.example \
@@ -48,7 +51,7 @@ Before it takes a single knock, the verifier makes sure of where it reads from, 
 - `VERIFIER_ETH_RPC` is chain 1, Ethereum mainnet, and ENS's Universal Resolver is there.
 - `VERIFIER_WORLD_RPC` is chain 480, World Chain, and the KnockBinding it accepts reports version 3.
 
-The KnockBinding it accepts isn't a setting. It's production v3 on World Chain, `0x7748D2787DcB6E6024968edC19fcA13ccAbA1699`, built in from [`contracts/deployments/480.json`](https://github.com/getknock/knock/blob/main/contracts/deployments/480.json). Bindings on any other KnockBinding, including staging's and older versions', never count.
+The KnockBinding it accepts is Knock's production v3 on World Chain, `0x7748D2787DcB6E6024968edC19fcA13ccAbA1699`, built in from [`contracts/deployments/480.json`](https://github.com/getknock/knock/blob/main/contracts/deployments/480.json), unless `VERIFIER_KNOCK_BINDING` names [a network of your own](../self-host/own-network.md)'s. Bindings on any other KnockBinding, including staging's and older versions', never count.
 
 ## Verify from your server
 
@@ -95,7 +98,7 @@ Check 2 compares the origin inside the knock, the one the Door saw, with `VERIFI
 
 ### From the browser, for trying things out
 
-The [quickstart](../quickstart.md) has the page ask the verifier itself. That works because the verifier allows CORS from `VERIFIER_ORIGIN`. It's fine for a demo, or when nothing on your server depends on the answer, as in the Human Club. Then the verifier must be reachable from the browser, behind your TLS proxy, at an address such as `https://knock.club.example`.
+The [quickstart](../quickstart.md) has the page ask the verifier itself. That works because the verifier allows CORS from `VERIFIER_ORIGIN`. It's fine for a demo, or when nothing on your server depends on the answer. Then the verifier must be reachable from the browser, behind your TLS proxy, at an address such as `https://knock.club.example`.
 
 ## One verifier per origin
 

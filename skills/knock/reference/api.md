@@ -3,6 +3,7 @@
 ## Contents
 
 - door-sdk: `knock()`, its options, the assertion, `KnockError`
+- @knock-dev/verify (TypeScript): `Verifier`, `Refusal`, stores, `check()`
 - The verifier's HTTP API: `POST /challenge`, `POST /verify`, `GET /health`
 - The verifier's settings
 - Strict mode
@@ -44,6 +45,32 @@ type Hex = `0x${string}`
 ```
 
 `knock()` opens `<door>/knock` as a popup named `knock-door` (420 by 680), waits for the Door's `knock/ready` and the challenge, checks the challenge is `0x` and 64 hex digits, posts `{ type: 'knock/request', challenge, mode }` to the Door's origin only, and settles on the Door's `knock/result`. It listens only to the popup it opened, at the Door's origin.
+
+## @knock-dev/verify (TypeScript)
+
+The eight checks inside a JavaScript server: Node 20 or later, Bun, Deno, serverless and edge functions. Never in the browser. One file, `packages/verify/src/index.ts`, needing `@knock-dev/protocol` and `viem`.
+
+```ts
+import { Refusal, Verifier, check, libsqlStore, memoryStore, parse, rpcChain, strictFrom } from '@knock-dev/verify'
+
+new Verifier({
+  origin: string,                         // the page's origin, exactly
+  store: Store,                           // libsqlStore(client): @libsql/client, file: or libsql:// (Turso); memoryStore() for tests
+  chain?: Chain,                          // rpcChain({ eth, world }): RPC URLs or viem clients; public RPCs by default
+  maxBindingDays?: number,                // 365
+  strict?: 'off' | 'safe' | 'finalized',  // strictFrom(text) reads on, true, finalized…
+  contract?: Hex,                         // a network of one's own's KnockBinding; Knock's by default
+})
+
+verifier.challenge(): Promise<{ challenge: Hex; origin: string; expiresAt: number }>  // ms
+verifier.verify(assertion: unknown, o?: { action?: string }): Promise<Knocked>        // or rejects with a Refusal
+function check(site: Site, a: Assertion, now?: number): Promise<Knocked>  // V3 to V7 with site.memory, for a site's own records
+```
+
+- `Knocked`: `{ name, key, keyHash, nullifier, counter, origin, binding: { tx, block, provedAt } }`, `provedAt` in unix seconds.
+- `Refusal`: `{ check, error, why, status }`, with the service's codes and words. `Response.json(e, { status: e.status })` answers as the service does.
+- `verify()` writes what a knock used up (its challenge, the Wedgie's counter, the action's entry) in one transaction, all or none.
+- Every instance of the server must share the store. On serverless, use `libsqlStore` with Turso, never `memoryStore()`.
 
 ## The verifier's HTTP API
 
@@ -120,6 +147,7 @@ CORS allows only `VERIFIER_ORIGIN`, for `GET` and `POST` with `content-type`. Se
 | `VERIFIER_WORLD_RPC` | `https://worldchain-mainnet.g.alchemy.com/public` | World Chain, for bindings |
 | `VERIFIER_MAX_BINDING_DAYS` | `365` | Oldest binding it takes |
 | `VERIFIER_STRICT` | `off` | `off`, `on` (same as `safe`), or `finalized` |
+| `VERIFIER_KNOCK_BINDING` | `knock` | Knock's KnockBinding, or the address of a network of one's own's |
 
 Run: `VERIFIER_ORIGIN=… cargo run --release -p knock-verifier` from the root of a Knock checkout. For production, use RPCs you trust: the verifier believes them.
 

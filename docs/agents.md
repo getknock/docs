@@ -12,7 +12,7 @@ Every page here is a Markdown file, and the site serves each one as it is, for a
 | File | What's in it |
 | --- | --- |
 | [`skills/knock/SKILL.md`](../skills/knock/SKILL.md) | The steps, the rules that matter, and what to check when done. |
-| [`skills/knock/reference/api.md`](../skills/knock/reference/api.md) | door-sdk and the verifier's HTTP API, in brief. |
+| [`skills/knock/reference/api.md`](../skills/knock/reference/api.md) | door-sdk, `@knock-dev/verify`, and the verifier's HTTP API, in brief. |
 | [`skills/knock/reference/refusals.md`](../skills/knock/reference/refusals.md) | Every `KnockError` code and refusal, and what to show for each. |
 
 ### Install it

@@ -44,6 +44,8 @@ INFO knock-verifier on http://127.0.0.1:8788
 
 It reads both chains through public RPCs unless you give it your own, and it needs no keys. [Run a verifier](guides/verifier.md) has every setting.
 
+If your server runs JavaScript, you can check knocks inside it instead, with no service to run: [Check knocks in your server](guides/verify-in-your-server.md). This quickstart uses the service, which works beside a site in any language.
+
 ## 3. Add door-sdk to your page
 
 door-sdk is one TypeScript file with no dependencies. Until it's on npm, copy it into your project:

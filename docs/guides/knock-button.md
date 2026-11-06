@@ -166,7 +166,7 @@ export function KnockButton({ onIn }: { onIn: (name: string) => void }) {
 }
 ```
 
-The Human Club does the same in [`apps/bouncer/app/Club.tsx`](https://github.com/getknock/knock/blob/main/apps/bouncer/app/Club.tsx), and ticks off the verifier's checks as it answers.
+The Human Club does the same in [`apps/bouncer/app/Knock.tsx`](https://github.com/getknock/knock/blob/main/apps/bouncer/app/Knock.tsx), and ticks off the checks as they pass.
 
 ## Options
 

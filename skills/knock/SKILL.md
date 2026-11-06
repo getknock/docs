@@ -1,6 +1,6 @@
 ---
 name: knock
-description: Add Knock to a website, so a real human gets in with one press on their Wedgie, a USB device bound to World ID and named in ENS. Use when asked to add a Knock button or Knock sign-in, to let each human do something once (enter, vote, claim, sign up) with Knock, to use @knock-dev/door-sdk, to run or call knock-verifier, to embed the knock-verify Rust crate, or to debug a knock that was refused (codes such as bad_challenge, wrong_origin, records_changing, revoked, binding_not_final, already_entered).
+description: Add Knock to a website, so a real human gets in with one press on their Wedgie, a USB device bound to World ID and named in ENS. Use when asked to add a Knock button or Knock sign-in, to let each human do something once (enter, vote, claim, sign up) with Knock, to use @knock-dev/door-sdk or @knock-dev/verify, to run or call knock-verifier, to embed the knock-verify Rust crate, or to debug a knock that was refused (codes such as bad_challenge, wrong_origin, records_changing, revoked, binding_not_final, already_entered).
 ---
 
 # Knock
@@ -8,18 +8,18 @@ description: Add Knock to a website, so a real human gets in with one press on t
 Knock lets a site let in a real human, once. The person presses green on their **Wedgie**. Its key is bound to their World ID on World Chain and named in ENS, such as `wedgie.itzraj.eth`. A site adds two things:
 
 1. **A button** that calls `knock()` from `@knock-dev/door-sdk`. It opens Knock's **Door**, a popup that asks the Wedgie, and resolves with what the Wedgie signed: the **assertion**.
-2. **A verifier**, `knock-verifier`: a small Rust service that gives out challenges and checks assertions against ENS and World Chain, eight checks in order. The site's server asks it, and acts on its answer.
+2. **A verifier**: `@knock-dev/verify` inside the site's own server when it runs JavaScript or TypeScript, or else `knock-verifier`, a small Rust service beside it. Either gives out challenges and checks assertions against ENS and World Chain, eight checks in order. The site's server acts on its answer.
 
 ## Rules that matter
 
 1. **Call `knock()` inside the click handler, before any `await`.** Browsers allow the Door's popup only while handling a click. Pass the challenge as a promise: `knock({ challenge: getChallenge() })`. Don't `await` the challenge first.
-2. **The assertion proves nothing until the verifier says `ok: true`.** Send it to the site's server, have the server call the verifier's `POST /verify`, and act only on that answer. Never let the browser tell the server "they're in".
+2. **The assertion proves nothing until the verifier says yes.** Send it to the site's server, have the server check it (`verifier.verify()` from `@knock-dev/verify`, or `knock-verifier`'s `POST /verify`), and act only on that answer. Never let the browser tell the server "they're in", and never run the checks in the browser.
 3. **Challenges come from the verifier only:** one per knock, used once, good for 120 seconds. Never make one up, cache one, or reuse one.
-4. **`VERIFIER_ORIGIN` must be the page's origin exactly**: scheme, host and port, no path or trailing slash. `http://localhost:5173` and `http://127.0.0.1:5173` are different. Each origin (production, staging, dev) needs its own verifier and database.
+4. **The verifier's origin must be the page's origin exactly** (`origin` in `@knock-dev/verify`, `VERIFIER_ORIGIN` in the service): scheme, host and port, no path or trailing slash. `http://localhost:5173` and `http://127.0.0.1:5173` are different. Each origin (production, staging, dev) needs its own verifier and database.
 5. **Key the site's records by `knock.nullifier`**, the human, not by `name` or `key`. One human can own several Wedgies, and change names.
-6. **For "once per human", pass `action`** to `/verify`, such as `"enter"`: 1 to 32 characters of `a-z`, `0-9` and `-`. Leave it out when any number of knocks is fine.
+6. **For "once per human", pass `action`** to `verify()` or `/verify`, such as `"enter"`: 1 to 32 characters of `a-z`, `0-9` and `-`. Leave it out when any number of knocks is fine.
 7. **Say what happened, in the API's own words.** Show a `KnockError`'s `message`, or a refusal's `why`. Show nothing for `rejected` (red on the Wedgie) or `closed` (Door closed).
-8. **Don't invent packages or install commands.** door-sdk isn't on npm, and knock-verify isn't on crates.io. The repo, `getknock/knock`, is private: use a checkout.
+8. **Don't invent packages or install commands.** door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io. The repo, `getknock/knock`, is private: use a checkout.
 
 ## Workflow
 
@@ -28,7 +28,7 @@ Copy this checklist and tick it off:
 ```
 - [ ] 1. Find the site's stack, its server, and its origins (dev, staging, production)
 - [ ] 2. Get door-sdk into the site
-- [ ] 3. Run knock-verifier for the dev origin
+- [ ] 3. Set up a verifier for the dev origin: @knock-dev/verify, or knock-verifier
 - [ ] 4. Add the server routes: challenge, and verify-then-act
 - [ ] 5. Add the button
 - [ ] 6. Handle every way a knock can fail
@@ -47,9 +47,11 @@ door-sdk is one TypeScript file with no dependencies, at `packages/door-sdk/src/
 - **Site inside the Knock monorepo:** add `"@knock-dev/door-sdk": "workspace:*"`. For Next.js, add `transpilePackages: ['@knock-dev/door-sdk']`.
 - **Anywhere else:** copy the file in, such as `src/lib/door-sdk.ts`, and import from it. Keep its header comment, and note where it came from.
 
-### 3. Run a verifier
+### 3. Set up a verifier
 
-From the root of a Knock checkout:
+**A JavaScript or TypeScript server** (Node 20 or later, Bun, Deno, serverless functions) runs the checks itself with `@knock-dev/verify`. Get it as door-sdk: `"@knock-dev/verify": "workspace:*"` in the Knock monorepo, or else copy `packages/verify/src/index.ts` and `packages/protocol/src/index.ts`, point the first's `'@knock-dev/protocol'` import at the second, and add `viem`, `@noble/curves` and `@libsql/client`. Make one `Verifier` per origin, with a store every instance of the server shares: `libsqlStore()` over a SQLite file, or Turso on serverless. See [reference/api.md](reference/api.md#knock-devverify-typescript).
+
+**Any other server** runs `knock-verifier` beside it. From the root of a Knock checkout:
 
 ```bash
 VERIFIER_ORIGIN=http://localhost:5173 cargo run --release -p knock-verifier
@@ -61,7 +63,34 @@ For a Rust server, the `knock-verify` crate runs the same checks in-process. See
 
 ### 4. Server routes
 
-Two routes on the site's own origin, so the verifier stays on `127.0.0.1`. In Next.js:
+Two routes on the site's own origin. With `@knock-dev/verify`, in Next.js:
+
+```ts
+// app/api/knock/route.ts. Keep the verifier in a module of its own, which the challenge route imports too.
+import { createClient } from '@libsql/client'
+import { Refusal, Verifier, libsqlStore } from '@knock-dev/verify'
+
+const verifier = new Verifier({
+  origin: process.env.KNOCK_ORIGIN ?? 'http://localhost:5173', // the page's origin, exactly
+  store: libsqlStore(createClient({ url: process.env.KNOCK_DB ?? 'file:knock.db', authToken: process.env.KNOCK_DB_TOKEN })),
+})
+
+export async function POST(req: Request) {
+  const { assertion } = await req.json()
+  try {
+    const k = await verifier.verify(assertion, { action: 'enter' })
+    await letIn({ human: k.nullifier, name: k.name }) // the site's own session, vote, claim…
+    return Response.json({ ok: true, name: k.name })
+  } catch (e) {
+    if (e instanceof Refusal) return Response.json(e, { status: e.status })
+    throw e
+  }
+}
+```
+
+The challenge route returns `{ challenge }` from `await verifier.challenge()`, catching a `Refusal` the same way.
+
+With `knock-verifier`, the server asks it, so it stays on `127.0.0.1`:
 
 ```ts
 // app/api/knock/challenge/route.ts
@@ -174,14 +203,14 @@ Every `KnockError` code and every refusal, with what to show, is in [reference/r
 
 Say these plainly when they matter to the site:
 
-- The Door runs locally for now (`http://localhost:3000`, door-sdk's `DOOR`). A hosted Door isn't there yet.
+- The Door runs locally for now (`http://localhost:3000`, door-sdk's `DOOR`). A hosted Door isn't there yet, but a site can serve its own copy: https://docs.getknock.dev/self-host/door.
 - Knocking needs a desktop Chromium browser. Firefox, Safari and phones can't knock.
 - The nullifier is public in ENS and the same on every site, so sites can tell the same human visited each.
 - A Wedgie has no PIN: whoever holds it can knock until its owner kills or revokes its name, which needs only their wallet.
-- Only bindings on KnockBinding v3, production, count. World ID Simulator bindings never do.
+- Only bindings on Knock's KnockBinding v3, production, count, unless the verifier is set to a network of its own. World ID Simulator bindings never do.
 
 ## More
 
-- [reference/api.md](reference/api.md): door-sdk's exports, the verifier's routes and settings, and the Rust crate.
+- [reference/api.md](reference/api.md): door-sdk's exports, `@knock-dev/verify`, the verifier's routes and settings, and the Rust crate.
 - [reference/refusals.md](reference/refusals.md): every code, and what to show.
 - The full docs are at https://docs.getknock.dev, and all in one file at https://docs.getknock.dev/llms-full.txt.
