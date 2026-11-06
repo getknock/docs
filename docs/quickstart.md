@@ -1,18 +1,18 @@
 ---
 title: Quickstart
-description: A Knock button on a page, a verifier beside it, and one human let in, in about fifteen minutes.
+description: A Knock button on a page, a server that checks each knock with @knock-dev/verify, and one human let in, in about fifteen minutes.
 ---
 
-By the end, you'll have a page with a Knock button, a verifier that checks each knock, and a Wedgie that gets in once and is turned away the second time.
+By the end, you'll have a page with a Knock button, a small server that checks each knock with `@knock-dev/verify`, and a Wedgie that gets in once and is turned away the second time.
 
 ## Before you start
 
-- **Bun** 1.4 or later, and **Rust** 1.88 or later (the crates use edition 2024 and its `let` chains).
-- **A checkout of `getknock/knock`**. It's private for now, so you need access.
+- **Bun** 1.4 or later.
+- **A checkout of `getknock/knock`**. It's private for now, so you need access. You'll work in a folder beside it.
 - **To knock:** a Wedgie that's set up in the Knock Console, meaning named and bound to a human, and Chrome or another Chromium browser on a desktop.
 
 > [!NOTE]
-> You can build all of this without a Wedgie. You need one only at step 5, to press green. [Test your integration](guides/testing.md) covers what you can check without one.
+> You can build all of this without a Wedgie. You need one only at step 4, to press green. [Test your integration](guides/testing.md) covers what you can check without one.
 
 ## 1. Run the Door
 
@@ -26,66 +26,101 @@ cd apps/door && bun run dev
 
 The Console and its Door are now at `http://localhost:3000`. If your Wedgie isn't set up yet, open `http://localhost:3000` and follow the Console's four steps: connect the Wedgie, choose its name, bind it with World ID, then name it in ENS. Binding also needs knockd, Knock's own signer, running beside the Console with Knock's World ID keys; sites never talk to it.
 
-## 2. Run a verifier for your page
+## 2. Check knocks in your server
 
-Your verifier checks knocks for one origin: the scheme, host and port your page is served from. This page assumes `http://localhost:5173`, Vite's default. Use yours.
+Your server checks each knock with `@knock-dev/verify`, Knock's eight checks as a TypeScript package. It gives out a challenge before each knock, then checks what the Wedgie signed against ENS and World Chain.
 
-```bash
-# from the root of the checkout
-VERIFIER_ORIGIN=http://localhost:5173 cargo run --release -p knock-verifier
-```
-
-Before it takes a knock, it checks that its RPCs are Ethereum mainnet and World Chain, and that KnockBinding v3 is where it should be. Then it says what it checks and where it listens:
-
-```text
-INFO checked: mainnet, World Chain, KnockBinding v3 at 0x7748D2787DcB6E6024968edC19fcA13ccAbA1699; knocks for http://localhost:5173; strict: off (a binding counts once it's in a block)
-INFO knock-verifier on http://127.0.0.1:8788
-```
-
-It reads both chains through public RPCs unless you give it your own, and it needs no keys. [Run a verifier](guides/verifier.md) has every setting.
-
-If your server runs JavaScript, you can check knocks inside it instead, with no service to run: [Check knocks in your server](guides/verify-in-your-server.md). This quickstart uses the service, which works beside a site in any language.
-
-## 3. Add door-sdk to your page
-
-door-sdk is one TypeScript file with no dependencies. Until it's on npm, copy it into your project:
+Make a folder beside your checkout:
 
 ```bash
-cp ../knock/packages/door-sdk/src/index.ts src/door-sdk.ts
+mkdir knock-quickstart && cd knock-quickstart
 ```
 
-If your site lives in the monorepo, as the Human Club does, add it as a workspace dependency instead, and import from `@knock-dev/door-sdk`:
+Then the server, in one file. It serves your page and answers two routes: one gives out challenges, the other checks knocks.
 
-```json title="package.json"
-{
-  "dependencies": {
-    "@knock-dev/door-sdk": "workspace:*"
-  }
+```ts title="server.ts"
+import { Refusal, Verifier, memoryStore } from '../knock/packages/verify/src/index.ts'
+import page from './index.html'
+
+// Checks knocks for this page's origin. It keeps what it has seen in memory, which is fine for one process.
+const verifier = new Verifier({ origin: 'http://localhost:5173', store: memoryStore() })
+
+// A refusal as JSON, with the HTTP status knock-verifier would give it
+function refused(e: unknown) {
+  if (e instanceof Refusal) return Response.json(e, { status: e.status })
+  throw e
 }
+
+Bun.serve({
+  port: 5173,
+  routes: {
+    '/': page,
+    '/api/challenge': {
+      POST: async () => {
+        try {
+          const { challenge } = await verifier.challenge()
+          return Response.json({ challenge })
+        } catch (e) {
+          return refused(e)
+        }
+      },
+    },
+    '/api/knock': {
+      POST: async (req) => {
+        const { assertion } = await req.json()
+        try {
+          // 'enter' lets each human in once. Leave the action out to let them in every time.
+          const k = await verifier.verify(assertion, { action: 'enter' })
+          return Response.json({ ok: true, name: k.name })
+        } catch (e) {
+          return refused(e)
+        }
+      },
+    },
+  },
+})
+
+console.log('Open http://localhost:5173')
 ```
 
-With Next.js, also add `transpilePackages: ['@knock-dev/door-sdk']` to `next.config.ts`, since the package ships TypeScript.
+The package isn't on npm yet, so the server imports it from your checkout, which `bun install` set up in step 1.
 
-## 4. Add the button
+The verifier checks knocks for one origin: the scheme, host and port your page is served from. Here that's `http://localhost:5173`, where this server serves the page. It reads both chains through public RPCs unless you give it your own, and it needs no keys.
 
-A knock is two requests to your verifier with one press in between: a challenge before, and the check after.
+`memoryStore()` keeps the challenges the verifier gave out, each Wedgie's counter and each human's entries in memory, and forgets them when the server stops. A real site keeps them in a database: [Check knocks in your server](guides/verify-in-your-server.md) shows how, with every setting.
+
+If your server isn't JavaScript, run [`knock-verifier`](guides/verifier.md) beside it instead. It runs the same checks as a small Rust service, and your server asks it over HTTP.
+
+## 3. Add the button
+
+The page is two files beside `server.ts`. It imports door-sdk, the browser side of Knock, from your checkout too.
 
 ```html title="index.html"
-<button id="knock" type="button">Knock</button>
-<p id="said" role="status"></p>
-<script type="module" src="/src/main.ts"></script>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Knock</title>
+  </head>
+  <body>
+    <button id="knock" type="button">Knock</button>
+    <p id="said" role="status"></p>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
 ```
 
-```ts title="src/main.ts"
-import { KnockError, knock } from './door-sdk'
+A knock is two requests to your server with one press in between: a challenge before, and the check after.
 
-const VERIFIER = 'http://localhost:8788'
+```ts title="main.ts"
+import { KnockError, knock } from '../knock/packages/door-sdk/src/index.ts'
+
 const button = document.querySelector<HTMLButtonElement>('#knock')!
 const said = document.querySelector<HTMLParagraphElement>('#said')!
 
-/** A fresh challenge from your verifier: single use, good for 2 minutes. */
+/** A fresh challenge from your server: single use, good for 2 minutes. */
 async function challenge(): Promise<`0x${string}`> {
-  const r = await fetch(`${VERIFIER}/challenge`, { method: 'POST' })
+  const r = await fetch('/api/challenge', { method: 'POST' })
   const j = await r.json()
   if (!r.ok) throw new Error(j.why)
   return j.challenge
@@ -100,13 +135,13 @@ button.addEventListener('click', async () => {
     const assertion = await knock({ challenge: challenge() })
 
     said.textContent = 'Checking…'
-    const r = await fetch(`${VERIFIER}/verify`, {
+    const r = await fetch('/api/knock', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ assertion, action: 'enter' }),
+      body: JSON.stringify({ assertion }),
     })
     const v = await r.json()
-    said.textContent = v.ok ? `In: ${v.knock.name}` : `Bounced at check ${v.check}: ${v.why}`
+    said.textContent = v.ok ? `In: ${v.name}` : `Bounced at check ${v.check}: ${v.why}`
   } catch (e) {
     said.textContent = e instanceof KnockError ? `No knock: ${e.message}` : String(e)
   } finally {
@@ -115,28 +150,34 @@ button.addEventListener('click', async () => {
 })
 ```
 
-> [!WARNING]
-> Here the page asks the verifier itself, which is fine for trying Knock out. When letting someone in changes something on your server, such as a session, a vote or a claim, have your server ask the verifier, and act only on its answer. [Run a verifier](guides/verifier.md#verify-from-your-server) shows how.
+The page only shows what the server decided. Your server is what lets someone in, counts a vote or starts a session, so it never takes the page's word for who got in.
 
-## 5. Knock
+## 4. Knock
 
-Run your page and press its button.
+Start the server, with the Door still running:
+
+```bash
+bun server.ts
+```
+
+Open `http://localhost:5173` and press the button.
 
 1. The Door opens as a popup. The first time, it asks you to connect the Wedgie, and the browser asks which serial device to use.
 2. The Wedgie shows **KNOCK**: the name it knocks as, and `http://localhost:5173`, the origin the Door saw.
 3. Press green. The Door closes, and your page says `In: wedgie.itzraj.eth`, or whichever name your Wedgie has.
-4. Press the button again and press green again. This time the verifier turns the knock away at check 8: `this human has done enter here already`.
+4. Press the button again and press green again. This time your server turns the knock away at check 8: `this human has done enter here already`.
 
 That second answer is `action: 'enter'` at work: the verifier keeps one entry per human for each action. Leave `action` out, and the same human can come in as often as they knock.
 
 ## What you have
 
 - A challenge per knock, so a knock can't be replayed or used on another site.
-- A verifier that read the name's records from ENS, the binding from World Chain, and checked the Wedgie's signature.
+- A server that read the name's records from ENS and the binding from World Chain, and checked the Wedgie's signature, before letting anyone in.
 - One entry per human for `enter`.
 
 ## Next
 
 - [Add a Knock button](guides/knock-button.md): the button for a real site, every error, and React.
-- [Run a verifier](guides/verifier.md): settings, deployment, and verifying from your server.
+- [Check knocks in your server](guides/verify-in-your-server.md): a database for what the verifier remembers, serverless functions, and every setting.
+- [Run a verifier](guides/verifier.md): the same checks as a service, for a server in another language.
 - [Checks and refusals](reference/checks.md): what each check means, and what to tell people.

@@ -49,7 +49,7 @@ Knock is new. Read this before you plan around it:
 
 ## Start here
 
-- New to Knock? The [quickstart](quickstart.md) gets a button and a verifier working in about fifteen minutes.
+- New to Knock? The [quickstart](quickstart.md) gets a button and a server that checks knocks working in about fifteen minutes.
 - Adding Knock to a real site? Read [Add a Knock button](guides/knock-button.md), then [Check knocks in your server](guides/verify-in-your-server.md) or [Run a verifier](guides/verifier.md).
 - Running Knock's parts yourself? [Host Knock yourself](self-host/overview.md).
 - Want each human in once? [One human, once](guides/one-human-once.md).

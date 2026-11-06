@@ -98,7 +98,7 @@ Check 2 compares the origin inside the knock, the one the Door saw, with `VERIFI
 
 ### From the browser, for trying things out
 
-The [quickstart](../quickstart.md) has the page ask the verifier itself. That works because the verifier allows CORS from `VERIFIER_ORIGIN`. It's fine for a demo, or when nothing on your server depends on the answer. Then the verifier must be reachable from the browser, behind your TLS proxy, at an address such as `https://knock.club.example`.
+A page can ask the verifier itself, because the verifier allows CORS from `VERIFIER_ORIGIN`. It's fine for a demo, or when nothing on your server depends on the answer. Then the verifier must be reachable from the browser, behind your TLS proxy, at an address such as `https://knock.club.example`.
 
 ## One verifier per origin
 

@@ -9,6 +9,14 @@ description: Every export of @knock-dev/door-sdk, the knock it returns field by 
 import { DOOR, type Assertion, type Hex, KnockError, type KnockOptions, knock } from '@knock-dev/door-sdk'
 ```
 
+## Get it
+
+It isn't on npm yet. Use it from a checkout of `getknock/knock`, in one of three ways:
+
+- **Import it from the checkout**, as the [quickstart](../quickstart.md) does: `from '../knock/packages/door-sdk/src/index.ts'`.
+- **Copy the file** into your project, such as `src/door-sdk.ts`, and import from it.
+- **In a workspace with Knock's packages**, add `"@knock-dev/door-sdk": "workspace:*"` to your dependencies. With Next.js, also add `transpilePackages: ['@knock-dev/door-sdk']` to `next.config.ts`, since the package ships TypeScript.
+
 ## knock()
 
 ```ts

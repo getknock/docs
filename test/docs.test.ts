@@ -5,7 +5,7 @@
  * may be in a page. Knock's code is read from a checkout of getknock/knock beside this repo, or at KNOCK_DIR.
  */
 import { describe, expect, test } from 'bun:test'
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import GithubSlugger from 'github-slugger'
 import type { Element } from 'hast'
@@ -272,6 +272,9 @@ describe('the examples', () => {
     }
     rmSync(dir, { recursive: true, force: true })
     try {
+      // Examples that import from a checkout beside them, as the quickstart's do, find Knock's
+      mkdirSync(dir, { recursive: true })
+      symlinkSync(KNOCK, path.join(dir, 'knock'))
       for (const e of examples) {
         const at = path.join(dir, e.file)
         write(at, e.code)
@@ -292,6 +295,7 @@ describe('the examples', () => {
             strict: true,
             noEmit: true,
             skipLibCheck: true,
+            allowImportingTsExtensions: true,
             types: ['bun'],
             paths: {
               '@knock-dev/door-sdk': [path.join(KNOCK, 'packages/door-sdk/src/index.ts')],
@@ -300,6 +304,7 @@ describe('the examples', () => {
             },
           },
           include: ['**/*.ts', '**/*.tsx'],
+          exclude: ['knock'],
         }),
       )
       const tsc = Bun.spawnSync([path.join(ROOT, 'node_modules/.bin/tsc'), '-p', dir], {
