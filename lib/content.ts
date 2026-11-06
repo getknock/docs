@@ -10,7 +10,7 @@ export const ROOT = process.cwd()
 export const DOCS = path.join(ROOT, 'docs')
 export const SKILLS = path.join(ROOT, 'skills')
 /** Where the site is served */
-export const SITE = 'https://getknock.dev'
+export const SITE = 'https://docs.getknock.dev'
 /** This repo, and Knock's code */
 export const REPO = 'https://github.com/getknock/docs'
 export const KNOCK_REPO = 'https://github.com/getknock/knock'

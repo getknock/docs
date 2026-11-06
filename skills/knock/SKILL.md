@@ -184,4 +184,4 @@ Say these plainly when they matter to the site:
 
 - [reference/api.md](reference/api.md): door-sdk's exports, the verifier's routes and settings, and the Rust crate.
 - [reference/refusals.md](reference/refusals.md): every code, and what to show.
-- The full docs are at https://getknock.dev, and all in one file at https://getknock.dev/llms-full.txt.
+- The full docs are at https://docs.getknock.dev, and all in one file at https://docs.getknock.dev/llms-full.txt.

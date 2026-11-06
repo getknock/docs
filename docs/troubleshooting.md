@@ -40,7 +40,7 @@ Your page is on `http://` at a host other than `localhost` or `127.0.0.1`. Serve
 
 ### `not_enrolled`
 
-The Wedgie has no name, or isn't bound to a human. Its owner sets it up in the Knock Console, at `/console`: the binding, then the name.
+The Wedgie has no name, or isn't bound to a human. Its owner sets it up in the Knock Console: the binding, then the name.
 
 ### `no_key`
 

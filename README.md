@@ -1,6 +1,6 @@
 # Knock docs
 
-The docs for [Knock](https://github.com/getknock/knock), served at getknock.dev: adding a Knock button to a site, running a verifier beside it, and what each check means; references for door-sdk, the verifier's HTTP API, knock-verify and the protocol; and a skill that teaches coding agents to do the same.
+The docs for [Knock](https://github.com/getknock/knock), served at docs.getknock.dev: adding a Knock button to a site, running a verifier beside it, and what each check means; references for door-sdk, the verifier's HTTP API, knock-verify and the protocol; and a skill that teaches coding agents to do the same.
 
 - `docs/`: the pages, in Markdown. They read as they are on GitHub.
 - `skills/knock/`: the Agent Skill, `SKILL.md` and its two references.

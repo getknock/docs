@@ -1,6 +1,6 @@
 import { NAV, SITE, docs, rawHrefOf } from '../../lib/content'
 
-// llms.txt: what Knock is, and every page as Markdown at its address on getknock.dev, in reading order
+// llms.txt: what Knock is, and every page as Markdown at its address on docs.getknock.dev, in reading order
 export const dynamic = 'force-static'
 
 export function GET() {

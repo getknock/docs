@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { SITE, docs } from '../lib/content'
 
-// Every page, at its address on getknock.dev
+// Every page, at its address on docs.getknock.dev
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {

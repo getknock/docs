@@ -24,7 +24,7 @@ bun install
 cd apps/door && bun run dev
 ```
 
-The Console and its Door are now at `http://localhost:3000`. If your Wedgie isn't set up yet, open `http://localhost:3000/console` and follow it: it walks you through the Wedgie's key, its binding with World ID, then its name in ENS. Binding also needs knockd, Knock's own signer, running beside the Console with Knock's World ID keys; sites never talk to it.
+The Console and its Door are now at `http://localhost:3000`. If your Wedgie isn't set up yet, open `http://localhost:3000` and follow the Console's four steps: connect the Wedgie, choose its name, bind it with World ID, then name it in ENS. Binding also needs knockd, Knock's own signer, running beside the Console with Knock's World ID keys; sites never talk to it.
 
 ## 2. Run a verifier for your page
 

@@ -51,7 +51,7 @@ function remarkAlerts() {
 
 /** Where a link in docs/<file> goes on the site: another doc's page, a skill file, or this repo on GitHub. */
 export function siteHref(file: string, href: string): string {
-  // A link to getknock.dev stays on the site it's read on
+  // A link to docs.getknock.dev stays on the site it's read on
   if (href === SITE || href.startsWith(`${SITE}/`)) return href.slice(SITE.length) || '/'
   if (/^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('#') || href.startsWith('/')) return href
   const [target, hash] = href.split('#')

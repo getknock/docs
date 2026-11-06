@@ -15,7 +15,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const doc = docBySlug((await params).slug.join('/'))
-  // Its address on getknock.dev, and the same page as Markdown, for agents
+  // Its address on docs.getknock.dev, and the same page as Markdown, for agents
   return doc
     ? {
         title: doc.title,

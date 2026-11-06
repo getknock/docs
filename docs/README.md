@@ -30,7 +30,7 @@ It doesn't tell you who the person is. You get the Wedgie's name and the human's
 | `knock-verifier` | Your verifier: `POST /challenge`, `POST /verify` and `GET /health`, with SQLite for what's been used. | [`server/verifier`](https://github.com/getknock/knock/blob/main/server/verifier/src/main.rs) |
 | `knock-verify` | The checks themselves, as a Rust library, for your own server. | [`crates/knock-verify`](https://github.com/getknock/knock/blob/main/crates/knock-verify/src/lib.rs) |
 | The Door | Knock's popup at `/knock`. It talks to the Wedgie over USB, from the browser. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/knock/Door.tsx) |
-| The Knock Console | Where a person sets up their Wedgie: its key, its name and its binding, and the kill switch. Sites never call it. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/console/Console.tsx) |
+| The Knock Console | Where a person sets up their Wedgie: its name, its binding, and its records in ENS; and the kill switch. Sites never call it. | [`apps/door`](https://github.com/getknock/knock/blob/main/apps/door/app/console/Console.tsx) |
 | `@knock-dev/protocol` | The messages a Wedgie signs (EIP-712), key helpers, and test vectors. | [`packages/protocol`](https://github.com/getknock/knock/blob/main/packages/protocol/src/index.ts) |
 | The Human Club | A demo site: a Knock button, a verifier, one entry per human. | [`apps/bouncer`](https://github.com/getknock/knock/blob/main/apps/bouncer/app/Club.tsx) |
 
