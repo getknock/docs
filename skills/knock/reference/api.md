@@ -149,7 +149,7 @@ CORS allows only `VERIFIER_ORIGIN`, for `GET` and `POST` with `content-type`. Se
 | `VERIFIER_STRICT` | `off` | `off`, `on` (same as `safe`), or `finalized` |
 | `VERIFIER_KNOCK_BINDING` | `knock` | Knock's KnockBinding, or the address of a network of one's own's |
 
-Run: `VERIFIER_ORIGIN=… cargo run --release -p knock-verifier` from the root of a Knock checkout. For production, use RPCs you trust: the verifier believes them.
+Run: `cargo install knock-verifier`, then `VERIFIER_ORIGIN=… knock-verifier`. For production, use RPCs you trust: the verifier believes them.
 
 ## Strict mode
 
@@ -158,7 +158,7 @@ By default a binding counts once its World Chain transaction is in a block. `VER
 ## knock-verify (Rust)
 
 ```toml
-knock-verify = { git = "https://github.com/getknock/knock" }
+knock-verify = "0.1"
 ```
 
 ```rust

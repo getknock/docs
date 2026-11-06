@@ -19,7 +19,7 @@ Knock lets a site let in a real human, once. The person presses green on their *
 5. **Key the site's records by `knock.nullifier`**, the human, not by `name` or `key`. One human can own several Wedgies, and change names.
 6. **For "once per human", pass `action`** to `verify()` or `/verify`, such as `"enter"`: 1 to 32 characters of `a-z`, `0-9` and `-`. Leave it out when any number of knocks is fine.
 7. **Say what happened, in the API's own words.** Show a `KnockError`'s `message`, or a refusal's `why`. Show nothing for `rejected` (red on the Wedgie) or `closed` (Door closed).
-8. **Don't invent packages or install commands.** door-sdk and `@knock-dev/verify` aren't on npm, and knock-verify isn't on crates.io: use a checkout of `getknock/knock`, or depend on the repo with git.
+8. **Don't invent packages or install commands.** door-sdk and `@knock-dev/verify` aren't on npm yet: use a checkout of `getknock/knock`. knock-verify and knock-verifier are on crates.io: `cargo add knock-verify`, `cargo install knock-verifier`.
 
 ## Workflow
 
@@ -51,10 +51,11 @@ door-sdk is one TypeScript file with no dependencies, at `packages/door-sdk/src/
 
 **A JavaScript or TypeScript server** (Node 20 or later, Bun, Deno, serverless functions) runs the checks itself with `@knock-dev/verify`. Get it as door-sdk: `"@knock-dev/verify": "workspace:*"` in the Knock monorepo, or else copy `packages/verify/src/index.ts` and `packages/protocol/src/index.ts`, point the first's `'@knock-dev/protocol'` import at the second, and add `viem`, `@noble/curves` and `@libsql/client`. Make one `Verifier` per origin, with a store every instance of the server shares: `libsqlStore()` over a SQLite file, or Turso on serverless. See [reference/api.md](reference/api.md#knock-devverify-typescript).
 
-**Any other server** runs `knock-verifier` beside it. From the root of a Knock checkout:
+**Any other server** runs `knock-verifier` beside it:
 
 ```bash
-VERIFIER_ORIGIN=http://localhost:5173 cargo run --release -p knock-verifier
+cargo install knock-verifier
+VERIFIER_ORIGIN=http://localhost:5173 knock-verifier
 ```
 
 It listens on `127.0.0.1:8788`, needs no keys, and reads both chains through public RPCs by default. It stops at start if an RPC is the wrong chain. Other settings: `VERIFIER_ADDR`, `VERIFIER_DB`, `VERIFIER_ETH_RPC`, `VERIFIER_WORLD_RPC`, `VERIFIER_MAX_BINDING_DAYS` (365) and `VERIFIER_STRICT` (`off`). Keep strict mode off unless a knock pays out something that can't be taken back; see [reference/api.md](reference/api.md).

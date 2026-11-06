@@ -7,11 +7,11 @@ description: The verifier's checks as a Rust library, for a server that checks k
 
 ## Add it
 
-It isn't on crates.io, so depend on the repo:
+It's on [crates.io](https://crates.io/crates/knock-verify):
 
 ```toml title="Cargo.toml"
 [dependencies]
-knock-verify = { git = "https://github.com/getknock/knock" }
+knock-verify = "0.1"
 alloy = { version = "2.5", default-features = false, features = ["std"] }
 ```
 

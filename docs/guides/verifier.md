@@ -7,16 +7,16 @@ description: knock-verifier is the service that decides whether a knock gets in.
 
 If your server runs JavaScript or TypeScript, you don't need the service: [`@knock-dev/verify`](verify-in-your-server.md) runs the same checks inside your server.
 
-## Build it
+## Install it
 
-From the root of a checkout of `getknock/knock`:
+It's on [crates.io](https://crates.io/crates/knock-verifier):
 
 ```bash
-cargo build --release -p knock-verifier
-./target/release/knock-verifier
+cargo install knock-verifier
+VERIFIER_ORIGIN=https://club.example knock-verifier
 ```
 
-It's one binary, with SQLite built in.
+It's one binary, with SQLite built in. To build it from a checkout of `getknock/knock` instead, run `cargo build --release -p knock-verifier` at its root: the binary is `target/release/knock-verifier`.
 
 ## Settings
 
