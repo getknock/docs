@@ -7,14 +7,8 @@ By the end, you'll have a page with a Knock button, a small server that checks e
 
 ## Before you start
 
-- **Bun** 1.4 or later.
-- **A checkout of [`getknock/knock`](https://github.com/getknock/knock)**, with `bun install` run in it. The packages aren't on npm yet, so you'll import them from the checkout, working in a folder beside it.
+- **Bun** 1.4 or later. The two packages come from npm.
 - **To knock:** a Wedgie that's set up in the [Knock Console](https://getknock.dev), meaning named and bound to a human, and Chrome or another Chromium browser on a desktop.
-
-```bash
-git clone https://github.com/getknock/knock
-cd knock && bun install && cd ..
-```
 
 > [!NOTE]
 > You can build all of this without a Wedgie. You need one only at step 3, to press green. [Test your integration](guides/testing.md) covers what you can check without one.
@@ -23,16 +17,18 @@ cd knock && bun install && cd ..
 
 Your server checks each knock with `@knock-dev/verify`, Knock's eight checks as a TypeScript package. It gives out a challenge before each knock, then checks what the Wedgie signed against ENS and World Chain.
 
-Make a folder beside your checkout:
+Make a folder and add the packages:
 
 ```bash
 mkdir knock-quickstart && cd knock-quickstart
+bun init -y
+bun add @knock-dev/verify @knock-dev/door-sdk
 ```
 
 Then the server, in one file. It serves your page and answers two routes: one gives out challenges, the other checks knocks.
 
 ```ts title="server.ts"
-import { Refusal, Verifier, memoryStore } from '../knock/packages/verify/src/index.ts'
+import { Refusal, Verifier, memoryStore } from '@knock-dev/verify'
 import page from './index.html'
 
 // Checks knocks for this page's origin. It keeps what it has seen in memory, which is fine for one process.
@@ -76,7 +72,7 @@ Bun.serve({
 console.log('Open http://localhost:5173')
 ```
 
-The package isn't on npm yet, so the server imports it from your checkout.
+The verifier comes from npm, so there's nothing to copy beside the server.
 
 The verifier checks knocks for one origin: the scheme, host and port your page is served from. Here that's `http://localhost:5173`, where this server serves the page. It reads both chains through public RPCs unless you give it your own, and it needs no keys.
 
@@ -86,7 +82,7 @@ If your server isn't JavaScript, run [`knock-verifier`](guides/verifier.md) besi
 
 ## 2. Add the button
 
-The page is two files beside `server.ts`. It imports door-sdk, the browser side of Knock, from your checkout too. door-sdk opens Knock's Door, at `https://door.getknock.dev`: the popup that talks to the Wedgie over USB. There's nothing to run for it.
+The page is two files beside `server.ts`. It imports door-sdk, the browser side of Knock, from npm too. door-sdk opens Knock's Door, at `https://door.getknock.dev`: the popup that talks to the Wedgie over USB. There's nothing to run for it.
 
 ```html title="index.html"
 <!doctype html>
@@ -106,7 +102,7 @@ The page is two files beside `server.ts`. It imports door-sdk, the browser side 
 A knock is two requests to your server with one press in between: a challenge before, and the check after.
 
 ```ts title="main.ts"
-import { KnockError, knock } from '../knock/packages/door-sdk/src/index.ts'
+import { KnockError, knock } from '@knock-dev/door-sdk'
 
 const button = document.querySelector<HTMLButtonElement>('#knock')!
 const said = document.querySelector<HTMLParagraphElement>('#said')!

@@ -10,20 +10,11 @@ description: "@knock-dev/verify runs the eight checks inside your own server: No
 
 ## Add it
 
-It isn't on npm yet. Use it from a checkout of `getknock/knock`, in one of two ways.
-
-In a workspace with Knock's packages, as the Human Club does:
-
-```json title="package.json"
-{
-  "dependencies": {
-    "@knock-dev/verify": "workspace:*",
-    "@libsql/client": "^0.18.0"
-  }
-}
+```bash
+bun add @knock-dev/verify @libsql/client
 ```
 
-Anywhere else, copy its file and the protocol's into your project, point one at the other, and add their two dependencies:
+In a workspace with Knock's packages, as the Human Club is, `"@knock-dev/verify": "workspace:*"` works too. To vendor it instead, copy its file and the protocol's into your project, point one at the other, and add their two dependencies:
 
 ```bash
 mkdir -p src/knock

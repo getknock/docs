@@ -42,7 +42,7 @@ Every part is open source, in [`getknock/knock`](https://github.com/getknock/kno
 
 Knock is new. Read this before you plan around it:
 
-- **door-sdk and `@knock-dev/verify` aren't on npm yet.** The [quickstart](quickstart.md) uses a checkout of [`getknock/knock`](https://github.com/getknock/knock) for them. knock-verify and knock-verifier are on crates.io. Every package is at 0.1.0.
+- **Every package is at 0.1.0.** `@knock-dev/protocol`, `@knock-dev/verify` and `@knock-dev/door-sdk` are on npm; `knock-verify` and `knock-verifier` are on crates.io.
 - **Knocking needs a desktop Chromium browser**, such as Chrome, Edge, Brave or Arc. The Door reaches the Wedgie over Web Serial, which Firefox, Safari and phones don't have.
 - **Only one kind of binding counts**: those made on KnockBinding v3's production deployment on World Chain. Bindings from World ID's Simulator (staging) never count.
 - **One mode.** Mode 1, Bound, takes the human from the Wedgie's binding. Mode 2, Fresh, a new World ID proof with each knock, isn't offered.
